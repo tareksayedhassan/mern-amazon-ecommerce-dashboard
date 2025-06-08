@@ -1,0 +1,40 @@
+.error {
+  background-color: #f8d7da;
+  color: #842029;
+  padding: 15px 20px;
+  margin-top: 20px;
+  border-radius: 12px;
+  display: block;
+}
+
+.app-btn {
+  all: unset;
+  cursor: pointer;
+  padding: 8px 20px;
+  border-radius: 4px;
+  font-weight: 600;
+  color: #4285fa;
+  border: 1px solid #4285fa;
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+.app-btn:hover {
+  background-color: #4285fa;
+  color: white;
+}
+
+.app-btn-primary {
+  background-color: #4285fa; /* لون الخلفية الزرقاء مشابه لـ Bootstrap */
+  color: white;
+  border: 1px solid #4285fa;
+  padding: 8px 20px;
+  border-radius: 4px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color 0.3s ease, opacity 0.3s ease;
+}
+
+.app-btn-primary:hover {
+  background-color: #3267d6; /* لون أغمق عند الـ hover */
+  opacity: 0.9;
+}

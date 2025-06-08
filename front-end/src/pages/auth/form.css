@@ -1,0 +1,103 @@
+/* تهيئة body و html لضمان عمل h-100 بشكل صحيح */
+html,
+body {
+  height: 100%;
+  margin: 0;
+  padding: 0;
+}
+
+.form {
+  background-image: linear-gradient(
+      110deg,
+      white 0%,
+      white 50%,
+      transparent 50%
+    ),
+    url("../../assets/1.jpg");
+  background-position: center;
+  background-size: cover;
+  background-repeat: no-repeat;
+  height: 30rem;
+  width: 100%;
+  border-radius: 12px;
+  box-shadow: 0 0 20px rgba(0, 0, 0, 0.3);
+  padding: 20px;
+}
+
+.app-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh; /* لضمان توسيط الفورم عموديًا */
+  margin: 0;
+  padding: 0;
+}
+
+.app-row {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%; /* لضمان أن app-row يأخذ العرض الكامل */
+}
+
+.h-100 {
+  height: 100vh; /* يبقى كما هو */
+}
+
+.app-row .app-col-12 {
+  width: 100%;
+}
+
+.app-row .app-col-6 {
+  width: 50%;
+}
+
+.app-form-control {
+  margin-bottom: 20px;
+  position: relative;
+}
+
+.app-form-control label,
+.app-form-control input {
+  display: block;
+}
+
+.app-form-control input {
+  padding: 20px 20px;
+  outline: none;
+  border-radius: 3px;
+  border: 0;
+  background-color: white;
+  width: 80%;
+  border-bottom: 3px solid transparent;
+  font-family: "Lato", sans-serif;
+  box-shadow: 0 0 10px rgba(153, 152, 152) inset;
+}
+
+.app-form-control label {
+  position: absolute;
+  top: -20px;
+  left: 0px;
+  font-size: 13px;
+  color: gray;
+  font-weight: bold;
+  transition: 0.3s;
+}
+
+.app-form-control input:placeholder-shown + label {
+  opacity: 0;
+  visibility: hidden;
+  top: 20px;
+}
+
+.custom-form {
+  width: 50%;
+}
+
+.app-form-control input:focus:valid {
+  border-bottom: 3px solid green;
+}
+
+.app-form-control input:focus:not(:valid) {
+  border-bottom: 3px solid orangered;
+}

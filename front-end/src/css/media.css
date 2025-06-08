@@ -1,0 +1,49 @@
+@media (max-width: 576px) {
+  .app-container {
+    width: 100%;
+    padding: 0 15px;
+  }
+}
+
+@media (max-width: 768px) {
+  .app-container {
+    width: 100%;
+    padding: 0 20px;
+  }
+}
+
+@media (max-width: 992px) {
+  .app-container {
+    width: 100%;
+    padding: 0 30px;
+  }
+  .form {
+    background-image: linear-gradient(
+        rgba(255, 255, 255, 0.8) 0%,
+        rgba(255, 255, 255, 0.8) 100%
+      ),
+      url("../assets/1.jpg");
+  }
+  .custom-form {
+    width: 100%;
+  }
+  .app-form-control input {
+    width: 100%;
+  }
+}
+
+/* شاشات متوسطة */
+@media (max-width: 1200px) {
+  .app-container {
+    width: 95%;
+    margin: 0 auto;
+  }
+}
+
+/* شاشات كبيرة */
+@media (max-width: 1400px) {
+  .app-container {
+    width: 90%;
+    margin: 0 auto;
+  }
+}

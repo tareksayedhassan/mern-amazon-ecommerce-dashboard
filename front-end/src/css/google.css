@@ -1,0 +1,93 @@
+.google-btn {
+  width: 184px;
+  height: 42px;
+  background-color: #4285fa;
+  border-radius: 2px;
+  box-shadow: 0 3px 4px 0 rgba(0, 0, 0, 0.25);
+  cursor: pointer;
+  user-select: none;
+  margin-top: 30px;
+  position: relative;
+}
+
+.google-btn .google-icon-wrapper {
+  position: absolute;
+  margin-top: 1px;
+  margin-left: 1px;
+  width: 40px;
+  height: 40px;
+  border-radius: 2px;
+  background-color: #fff;
+}
+
+.google-btn .google-icon {
+  position: absolute;
+  margin-top: 11px;
+  margin-left: 11px;
+  width: 18px;
+  height: 18px;
+}
+
+.google-btn .btn-text {
+  float: right;
+  margin: 11px 11px 0 0;
+  color: #fff;
+  font-size: 14px;
+  letter-spacing: 0.2px;
+}
+
+.google-btn:hover {
+  box-shadow: 0 0 6px #4285fa;
+}
+
+.google-btn:active {
+  background-color: #1669f2;
+}
+.register-section {
+  margin-top: 20px;
+  display: flex;
+  align-items: flex-start;
+  gap: 15px;
+  justify-content: flex-start;
+}
+
+.register-section .simple-btn {
+  all: unset;
+  cursor: pointer;
+  padding: 8px 20px;
+  border-radius: 4px;
+  font-weight: 600;
+  color: #4285fa;
+  border: 1px solid #4285fa;
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+.register-section .simple-btn:hover {
+  background-color: #4285fa;
+  color: white;
+}
+
+.login-text {
+  font-size: 14px;
+  color: #555;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  margin: 0;
+}
+
+.login-text p {
+  margin: 0 0 5px 0;
+}
+
+.login-text a {
+  color: #4285fa;
+  text-decoration: none;
+  font-weight: 600;
+  transition: color 0.3s ease;
+}
+
+.login-text a:hover {
+  text-decoration: underline;
+  color: #1669f2;
+}

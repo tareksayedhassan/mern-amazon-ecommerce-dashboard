@@ -1,0 +1,12 @@
+.dashboard {
+  min-height: 100vh;
+  background-color: #f7f8fa;
+}
+.dashboard-content {
+  margin-left: 240px; /* زودنا المسافة بين السايد بار والمحتوى */
+  width: calc(100% - 240px); /* عشان المحتوى ما يتعداش العرض */
+  min-height: calc(100vh - 70px);
+  background-color: #f9f9f9;
+  padding: 25px; /* زودنا البادينج شويه */
+  border-radius: 10px;
+}

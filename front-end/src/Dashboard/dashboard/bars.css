@@ -1,0 +1,104 @@
+/* ---- Top Bar ---- */
+.top-bar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 70px;
+  background-color: white;
+  box-shadow: 0 0 4px 0 rgba(0, 0, 0, 0.2);
+  z-index: 2;
+  padding: 0 20px;
+
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.topbar-left {
+  display: flex;
+  align-items: center;
+  gap: 1rem; /* المسافة بين الشعار والأيقونة */
+}
+
+.topbar-title {
+  margin: 0;
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: #333;
+}
+
+.topbar-icon {
+  font-size: 24px;
+  cursor: pointer;
+  color: #444;
+  transition: color 0.3s ease;
+}
+
+.topbar-icon:hover {
+  color: #3c8ed9;
+}
+
+/* ---- Side Bar ---- */
+.side-bar {
+  position: sticky;
+  top: 70px;
+  left: 0;
+  width: 220px;
+  height: calc(100vh - 70px);
+  background-color: white;
+  box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.1);
+  padding: 20px 10px;
+  z-index: 1;
+  transition: left 0.3s ease;
+}
+
+.nav-icon {
+  padding: 10px;
+  color: #444;
+  font-weight: 500;
+  font-size: 16px;
+  display: flex;
+  align-items: center;
+  text-decoration: none;
+  border-radius: 8px;
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+.icon {
+  color: #5ba3f3; /* أزرق مضيء */
+  font-size: 18px;
+  margin-right: 10px;
+  transition: color 0.3s ease;
+}
+
+.label {
+  font-size: 16px;
+  transition: color 0.3s ease;
+}
+
+/* Hover: لون مختلف */
+.nav-icon:hover {
+  background-color: #e8f4fd; /* لون سماوي خفيف */
+  color: #3c8ed9;
+}
+
+.nav-icon:hover .icon {
+  color: #3c8ed9;
+}
+
+.nav-icon:hover .label {
+  color: #3c8ed9;
+}
+
+/* العنصر النشط */
+.nav-icon.active {
+  background-color: #dceeff;
+  color: #247ba0;
+  font-weight: 600;
+}
+
+.nav-icon.active .icon,
+.nav-icon.active .label {
+  color: #247ba0;
+}
