@@ -1,4 +1,4 @@
-import { faUsers } from "@fortawesome/free-solid-svg-icons";
+import { faFeather, faPlus, faUsers } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import React, { useContext } from "react";
 import { NavLink } from "react-router-dom";
@@ -6,7 +6,7 @@ import "./bars.css";
 import { Menu } from "../../context/menuContext";
 import { WindowSize } from "../../context/WindowContext";
 
-const SideBar = () => {
+const SideBar = ({ role }) => {
   const { isOpen } = useContext(Menu);
   const { windowSize } = useContext(WindowSize);
 
@@ -34,21 +34,67 @@ const SideBar = () => {
 
   return (
     <div className="side-bar" style={sidebarStyle}>
-      <NavLink
-        to={"users"}
-        className={({ isActive }) =>
-          isActive ? "nav-icon active" : "nav-icon"
-        }
-      >
-        <FontAwesomeIcon
-          icon={faUsers}
-          className="icon"
-          style={{ padding: isOpen ? "10px 8px 10px 15px" : "10px 13px" }}
-        />
-        <span className="label" style={{ display: isOpen ? "block" : "none" }}>
-          Users
-        </span>
-      </NavLink>
+      {role === "admin" && (
+        <>
+          <NavLink
+            to={"users"}
+            className={({ isActive }) =>
+              isActive ? "nav-icon active" : "nav-icon"
+            }
+          >
+            <FontAwesomeIcon
+              icon={faUsers}
+              className="icon"
+              style={{ padding: isOpen ? "10px 8px 10px 15px" : "10px 13px" }}
+            />
+            <span
+              className="label"
+              style={{ display: isOpen ? "block" : "none" }}
+            >
+              Users
+            </span>
+          </NavLink>
+          <NavLink
+            to={"users/add"}
+            className={({ isActive }) =>
+              isActive ? "nav-icon active" : "nav-icon"
+            }
+          >
+            <FontAwesomeIcon
+              icon={faPlus}
+              className="icon"
+              style={{ padding: isOpen ? "10px 8px 10px 15px" : "10px 13px" }}
+            />
+            <span
+              className="label"
+              style={{ display: isOpen ? "block" : "none" }}
+            >
+              add user
+            </span>
+          </NavLink>
+        </>
+      )}
+
+      {(role === "admin" || role === "writer") && (
+        <NavLink
+          to={"writer"}
+          className={({ isActive }) =>
+            isActive ? "nav-icon active" : "nav-icon"
+          }
+        >
+          <FontAwesomeIcon
+            icon={faFeather}
+            className="icon"
+            style={{ padding: isOpen ? "10px 8px 10px 15px" : "10px 13px" }}
+          />
+          <span
+            className="label"
+            style={{ display: isOpen ? "block" : "none" }}
+          >
+            Writer{" "}
+          </span>
+        </NavLink>
+      )}
     </div>
   );
 };

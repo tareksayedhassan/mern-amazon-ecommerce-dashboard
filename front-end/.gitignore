@@ -8,31 +8,61 @@ npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
 
-# Build folders
+# Build output
 dist/
 build/
 
-# Environment variables
+# Dependency directories
+jspm_packages/
+
+# Optional npm cache directory
+.npm
+
+# Optional eslint cache
+.eslintcache
+
+# dotenv environment variables file
 .env
 .env.local
 .env.development.local
 .env.test.local
 .env.production.local
 
-# OS files
-.DS_Store
-Thumbs.db
-
-# IDE/editor files
+# IDE and editor folders
 .vscode/
 .idea/
+*.sublime-project
+*.sublime-workspace
 
-# Cache
-.cache/
-*.cache/
+# Mac system files
+.DS_Store
 
-# Git LFS
-*.pack
+# Windows system files
+Thumbs.db
+ehthumbs.db
 
-# Others
+# Coverage reports
 coverage/
+
+# React Native
+.expo/
+.expo-shared/
+
+# Misc
+*.pem
+*.p12
+*.key
+*.crt
+
+# Yarn integrity file
+.yarn-integrity
+
+# Parcel cache
+.cache/
+
+# Testing
+.nyc_output/
+
+# Temporary folders and files
+tmp/
+temp/

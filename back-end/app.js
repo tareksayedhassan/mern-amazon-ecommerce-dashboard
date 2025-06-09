@@ -26,6 +26,15 @@ app.use(
     saveUninitialized: false,
   })
 );
+// Globale Error handler
+app.use((error, req, res, next) => {
+  res.status(error.statusCode || 500).json({
+    status: error.statusText || Error,
+    message: error.message,
+    code: error.statusCode || 500,
+    data: null,
+  });
+});
 
 require("./config/passport");
 app.use(passport.initialize());
@@ -33,6 +42,7 @@ app.use(passport.session());
 
 const users = require("./Routes/users");
 const auth = require("./Routes/auth");
+const { Error } = require("./utils/httpStatusText");
 
 app.use("/api/auth", auth);
 app.use("/api/user", users);

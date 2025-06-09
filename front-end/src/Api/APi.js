@@ -5,3 +5,4 @@ export const USERS = "user";
 export const DELETE_USER = "user";
 export const UPDATE_USER = "user";
 export const GET_SINGLE_USER = "/user";
+export const ADD_USER = "user";

@@ -1,0 +1,95 @@
+.edit-user-container {
+  background-color: #f8fafc;
+  min-height: calc(100vh - 70px);
+  font-family: "Poppins", sans-serif;
+  width: 100%;
+  box-sizing: border-box;
+  padding: 1rem;
+}
+
+.edit-user-container h3 {
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: #333;
+}
+
+.form-control {
+  border-radius: 8px;
+  border: 1px solid #d1d5db;
+  font-size: 1rem;
+  padding: 0.75rem 1rem;
+  min-height: 44px;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.form-label {
+  font-size: 1rem;
+  font-weight: 500;
+  color: #444;
+}
+
+.btn-primary {
+  background: linear-gradient(90deg, #3b82f6, #2563eb);
+  border: none;
+  border-radius: 8px;
+  padding: 0.75rem 1.5rem;
+  font-size: 1rem;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.btn-primary:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.btn-primary:disabled {
+  background: #6b7280;
+  cursor: not-allowed;
+}
+
+@media (max-width: 768px) {
+  .edit-user-container {
+    padding: 0.75rem;
+  }
+
+  .edit-user-container h3 {
+    font-size: 1.3rem;
+  }
+
+  .form-control {
+    font-size: 0.95rem;
+    padding: 0.6rem 0.8rem;
+    min-height: 40px;
+  }
+
+  .form-label {
+    font-size: 0.95rem;
+  }
+
+  .btn-primary {
+    font-size: 0.95rem;
+    padding: 0.6rem 1.2rem;
+  }
+
+  @media (max-width: 576px) {
+    .edit-user-container {
+      padding: 0.5rem;
+    }
+
+    .form-control {
+      font-size: 0.9rem;
+      padding: 0.5rem 0.7rem;
+      min-height: 38px;
+    }
+
+    .form-label {
+      font-size: 0.9rem;
+    }
+
+    .btn-primary {
+      font-size: 0.9rem;
+      padding: 0.5rem 1rem;
+    }
+  }
+}

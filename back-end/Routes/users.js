@@ -12,7 +12,7 @@ const {
   deleteUser,
 } = require("../controllers/usersController");
 
-const adminOnly = [verifyToken, allowedTo("admin", "superAdmin")];
+const adminOnly = [verifyToken, allowedTo("admin")];
 
 router.get("/", adminOnly, getAllUsers);
 router.get("/:id", adminOnly, getSingleUser);
@@ -33,5 +33,4 @@ router.post(
 );
 router.patch("/:id", adminOnly, updateUser);
 router.delete("/:id", adminOnly, deleteUser);
-
 module.exports = router;

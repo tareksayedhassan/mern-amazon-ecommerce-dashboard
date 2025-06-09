@@ -7,33 +7,31 @@ import ErrorPage from "../Error/Error";
 const RequiredAuth = () => {
   const cookie = Cookie();
   const token = cookie.get("Bearer");
-  const [isAllowed, setIsAllowed] = useState(null);
+  const [userRole, setUserRole] = useState(null);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     if (!token) {
-      setIsAllowed(false);
+      setUserRole(false);
+      setLoading(false);
       return;
     }
 
     try {
       const decoded = jwtDecode(token);
-      const role = decoded.role;
-
-      if (role === "admin" || role === "superAdmin") {
-        setIsAllowed(true);
-      } else {
-        setIsAllowed(false);
-      }
+      setUserRole(decoded.role);
     } catch (err) {
-      setIsAllowed(false);
+      setUserRole(false);
+    } finally {
+      setLoading(false);
     }
   }, [token]);
 
-  if (isAllowed === null) return <div>Loading...</div>;
+  if (loading) return <div>Loading...</div>;
 
-  if (!isAllowed) return <ErrorPage />;
+  if (!userRole) return <ErrorPage />;
 
-  return <Outlet />;
+  return <Outlet context={{ role: userRole }} />;
 };
 
 export default RequiredAuth;

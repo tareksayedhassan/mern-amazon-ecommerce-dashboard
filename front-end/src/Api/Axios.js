@@ -3,9 +3,20 @@ import Cookie from "cookie-universal";
 import { BASE_URL } from "./APi";
 
 const cookie = Cookie();
-const token = cookie.get("Bearer");
 
 export const Axios = axios.create({
   baseURL: BASE_URL,
-  headers: token ? { Authorization: `Bearer ${token}` } : {},
 });
+
+Axios.interceptors.request.use(
+  (config) => {
+    const token = cookie.get("Bearer");
+    if (token) {
+      config.headers.Authorization = `Bearer ${token}`;
+    }
+    return config;
+  },
+  (error) => {
+    return Promise.reject(error);
+  }
+);

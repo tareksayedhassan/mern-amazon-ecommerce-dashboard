@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import Cookie from "cookie-universal";
 import { useNavigate } from "react-router-dom";
 import Loading from "../../Loading/Loading";
+import { Button } from "react-bootstrap";
 
 const Logout = () => {
   const [loading, setLoading] = useState(false);
@@ -14,14 +15,18 @@ const Logout = () => {
     setTimeout(() => {
       setLoading(false);
       navigate("/login");
-    }, 1000); // وقت بسيط عشان تظهر اللودينج لو حابب
+    }, 1000);
   };
 
   if (loading) {
     return <Loading />;
   }
 
-  return <button onClick={handelDelete}>Logout</button>;
+  return (
+    <Button variant="primary" onClick={handelDelete}>
+      Logout
+    </Button>
+  );
 };
 
 export default Logout;

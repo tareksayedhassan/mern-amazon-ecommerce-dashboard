@@ -9,7 +9,6 @@
   box-shadow: 0 0 4px 0 rgba(0, 0, 0, 0.2);
   z-index: 2;
   padding: 0 20px;
-
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -18,7 +17,7 @@
 .topbar-left {
   display: flex;
   align-items: center;
-  gap: 1rem; /* المسافة بين الشعار والأيقونة */
+  gap: 1rem;
 }
 
 .topbar-title {
@@ -41,16 +40,13 @@
 
 /* ---- Side Bar ---- */
 .side-bar {
-  position: sticky;
   top: 70px;
-  left: 0;
-  width: 220px;
   height: calc(100vh - 70px);
   background-color: white;
   box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.1);
   padding: 20px 10px;
-  z-index: 1;
-  transition: left 0.3s ease;
+  z-index: 1000;
+  transition: transform 0.3s ease, width 0.3s ease;
 }
 
 .nav-icon {
@@ -66,7 +62,7 @@
 }
 
 .icon {
-  color: #5ba3f3; /* أزرق مضيء */
+  color: #5ba3f3;
   font-size: 18px;
   margin-right: 10px;
   transition: color 0.3s ease;
@@ -77,21 +73,16 @@
   transition: color 0.3s ease;
 }
 
-/* Hover: لون مختلف */
 .nav-icon:hover {
-  background-color: #e8f4fd; /* لون سماوي خفيف */
+  background-color: #e8f4fd;
   color: #3c8ed9;
 }
 
-.nav-icon:hover .icon {
-  color: #3c8ed9;
-}
-
+.nav-icon:hover .icon,
 .nav-icon:hover .label {
   color: #3c8ed9;
 }
 
-/* العنصر النشط */
 .nav-icon.active {
   background-color: #dceeff;
   color: #247ba0;
@@ -101,4 +92,35 @@
 .nav-icon.active .icon,
 .nav-icon.active .label {
   color: #247ba0;
+}
+
+/* ---- Dashboard Content ---- */
+.dashboard-content {
+  padding: 20px;
+  transition: margin-left 0.3s ease, width 0.3s ease;
+}
+
+@media (max-width: 768px) {
+  .dashboard-content {
+    padding: 10px;
+    width: 100%;
+  }
+}
+.top-bar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px 20px;
+}
+
+.topbar-left {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+}
+
+.topbar-dropdown {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
 }

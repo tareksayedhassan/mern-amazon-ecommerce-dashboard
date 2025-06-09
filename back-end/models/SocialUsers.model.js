@@ -30,7 +30,7 @@ const SocialUsers = new mongoose.Schema(
     googleId: {
       type: String,
       unique: true,
-      sparse: true, // يسمح بعدم وجود googleId عند تسجيل المستخدم بالباسورد فقط
+      sparse: true,
     },
 
     token: {
@@ -39,7 +39,7 @@ const SocialUsers = new mongoose.Schema(
 
     role: {
       type: String,
-      enum: ["admin", "superAdmin", "user"],
+      enum: ["admin", "writer", "user"],
       default: "user",
     },
   },

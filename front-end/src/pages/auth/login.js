@@ -30,7 +30,7 @@ const Login = () => {
       cookie.set("Bearer", token);
       setloading(false);
       setMessage("User logged in successfully");
-      if (decoded.role == "admin" || decoded.role == "superAdmin") {
+      if (decoded.role == "admin" || decoded.role == "writer") {
         navigate("/dashboard", { replace: true });
       } else {
         navigate("/", { replace: true });
