@@ -2,48 +2,58 @@ import React, { useState, useContext } from "react";
 import Form from "react-bootstrap/Form";
 import Button from "react-bootstrap/Button";
 import { useNavigate } from "react-router-dom";
-import { ADD_USER, BASE_URL } from "../../../Api/APi";
+import { ADD_CATEGORY, BASE_URL } from "../../../Api/APi";
 import { Axios } from "../../../Api/Axios";
 import { toast } from "react-toastify";
 import Loading from "../../../Loading/Loading";
-import { Menu } from "../../../context/menuContext";
 import { WindowSize } from "../../../context/WindowContext";
-import "./EditUser.css";
+import Cookie from "cookie-universal";
+import { jwtDecode } from "jwt-decode";
+import "./Category.css";
 
-const AddUser = () => {
+const AddCategory = () => {
   const [name, setName] = useState("");
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [role, setRole] = useState("");
+  const [image, setImage] = useState(null);
   const [loading, setLoading] = useState(false);
 
+  const cookie = Cookie();
+  const token = cookie.get("Bearer");
+  const decoded = jwtDecode(token);
   const { windowSize } = useContext(WindowSize);
   const navigate = useNavigate();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
-
-    const toastId = toast.loading("Adding user...");
+    const toastId = toast.loading("Adding Category...");
 
     try {
-      const res = await Axios.post(
-        `${BASE_URL}/${ADD_USER}`,
-        { name, email, password, role },
-        { withCredentials: true }
-      );
+      const formData = new FormData();
+      formData.append("name", name);
+      formData.append("createdBy", decoded.id);
+      if (image) {
+        formData.append("image", image);
+      }
+
+      const res = await Axios.post(`${BASE_URL}/${ADD_CATEGORY}`, formData, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "multipart/form-data",
+        },
+        withCredentials: true,
+      });
 
       if (res.data.status === "success") {
         toast.update(toastId, {
-          render: "User added successfully!",
+          render: "Category added successfully!",
           type: "success",
           isLoading: false,
           autoClose: 3000,
         });
-        navigate("/dashboard/users");
+        navigate("/dashboard/product-manager");
       } else {
         toast.update(toastId, {
-          render: "Failed to add user!",
+          render: "Failed to add category!",
           type: "error",
           isLoading: false,
           autoClose: 3000,
@@ -56,7 +66,7 @@ const AddUser = () => {
         isLoading: false,
         autoClose: 3000,
       });
-      console.error("Add user error:", error);
+      console.error("Add category error:", error);
     } finally {
       setLoading(false);
     }
@@ -75,7 +85,7 @@ const AddUser = () => {
     <>
       {loading && <Loading />}
       <div className="edit-user-container" style={containerStyle}>
-        <h3 className="mb-4 text-center">Add User</h3>
+        <h3 className="mb-4 text-center">Add Category</h3>
         <Form
           onSubmit={handleSubmit}
           style={{ width: "100%", maxWidth: "500px" }}
@@ -84,53 +94,25 @@ const AddUser = () => {
             <Form.Label>Name</Form.Label>
             <Form.Control
               type="text"
-              placeholder="Enter name"
+              placeholder="Category Name"
               value={name}
               onChange={(e) => setName(e.target.value)}
               required
             />
           </Form.Group>
 
-          <Form.Group className="mb-3" controlId="formEmail">
-            <Form.Label>Email address</Form.Label>
+          <Form.Group className="mb-3" controlId="formImage">
+            <Form.Label>Image</Form.Label>
             <Form.Control
-              type="email"
-              placeholder="name@example.com"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              required
+              type="file"
+              accept="image/*"
+              onChange={(e) => setImage(e.target.files[0])}
             />
-          </Form.Group>
-
-          <Form.Group className="mb-3" controlId="formPassword">
-            <Form.Label>Password</Form.Label>
-            <Form.Control
-              type="password"
-              placeholder="***********"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              required
-            />
-          </Form.Group>
-
-          <Form.Group className="mb-4" controlId="roleSelect">
-            <Form.Label>Select Role:</Form.Label>
-            <Form.Select
-              value={role}
-              onChange={(e) => setRole(e.target.value)}
-              required
-            >
-              <option value="">-- Select a role --</option>
-              <option value="admin">Admin</option>
-              <option value="writer">Writer</option>
-              <option value="user">User</option>
-              <option value="product manager">Product Manager</option>
-            </Form.Select>
           </Form.Group>
 
           <div className="d-flex justify-content-center">
             <Button variant="primary" type="submit">
-              Add User
+              Add Category
             </Button>
           </div>
         </Form>
@@ -139,4 +121,4 @@ const AddUser = () => {
   );
 };
 
-export default AddUser;
+export default AddCategory;

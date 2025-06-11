@@ -3,7 +3,7 @@ import "./bars.css";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faBars } from "@fortawesome/free-solid-svg-icons";
 import { Menu } from "../../context/menuContext";
-import { jwtDecode } from "jwt-decode"; // صححت الاستيراد
+import { jwtDecode } from "jwt-decode";
 import Cookie from "cookie-universal";
 import { GET_SINGLE_USER } from "../../Api/APi";
 import { Axios } from "../../Api/Axios";

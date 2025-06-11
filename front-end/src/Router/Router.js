@@ -11,6 +11,10 @@ import EditUser from "../Dashboard/pages/users/EditUser";
 import AddUser from "../Dashboard/pages/users/AddUser";
 import Writer from "../Dashboard/pages/Writer/Writer";
 import RoleBasedRoute from "../pages/auth/RoleBasedRoute";
+import RequireBack from "../pages/auth/RequireBack";
+import ProductManager from "../Dashboard/pages/ProductManager/ProductManager";
+import AddCategory from "../Dashboard/pages/Categorys/AddCategory";
+import EditCategory from "../Dashboard/pages/Categorys/EditCategory";
 
 const Router = createBrowserRouter([
   {
@@ -19,14 +23,18 @@ const Router = createBrowserRouter([
     errorElement: <ErrorPage />,
     children: [
       { index: true, element: <Home /> },
-
       {
-        path: "login",
-        element: <Login />,
-      },
-      {
-        path: "register",
-        element: <Register />,
+        element: <RequireBack />,
+        children: [
+          {
+            path: "login",
+            element: <Login />,
+          },
+          {
+            path: "register",
+            element: <Register />,
+          },
+        ],
       },
 
       {
@@ -42,6 +50,25 @@ const Router = createBrowserRouter([
                   {
                     path: "writer",
                     element: <Writer />,
+                  },
+                ],
+              },
+              {
+                element: (
+                  <RoleBasedRoute allowedRoles={["product manager", "admin"]} />
+                ),
+                children: [
+                  {
+                    path: "product-manager",
+                    element: <ProductManager />,
+                  },
+                  {
+                    path: "add-category",
+                    element: <AddCategory />,
+                  },
+                  {
+                    path: "edit-Category/:id",
+                    element: <EditCategory />,
                   },
                 ],
               },

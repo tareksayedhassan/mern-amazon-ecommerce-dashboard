@@ -1,18 +1,18 @@
 .users-container {
-  padding: 1rem; /* تقليل الـ padding عشان يتماشى مع dashboard-content */
+  padding: 1rem;
   background-color: #f8fafc;
-  min-height: calc(100vh - 70px); /* نطرح ارتفاع الـ Topbar */
+  min-height: calc(100vh - 70px);
   font-family: "Poppins", sans-serif;
-  width: 100%; /* التأكد إن الكونتينر ميخرجش عن الحدود */
-  box-sizing: border-box; /* ضمان إن الـ padding ميأثرش على العرض */
+  width: 100%;
+  box-sizing: border-box;
 }
 
 .custom-table {
   background: white;
   border-radius: 12px;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
-  width: 100%; /* الجدول يملّي الكونتينر */
-  border-collapse: collapse; /* منع الفواصل غير المرغوبة */
+  width: 100%;
+  border-collapse: collapse;
 }
 
 .custom-table thead {
@@ -24,7 +24,7 @@
 .custom-table td {
   padding: 12px;
   text-align: center;
-  white-space: nowrap; /* منع تكسير النصوص في الخلايا */
+  white-space: nowrap;
 }
 
 .custom-table tbody tr {
@@ -61,7 +61,7 @@
 .search-container {
   position: relative;
   width: 25%;
-  min-width: 200px; /* منع الضغط الزايد على الموبايل */
+  min-width: 200px;
 }
 
 .search-input {
@@ -86,52 +86,48 @@
   border-radius: 12px;
 }
 
-/* Media Query لشاشات الموبايل */
 @media (max-width: 768px) {
   .users-container {
-    padding: 0.5rem; /* تقليل الـ padding أكتر على الموبايل */
+    padding: 0.5rem;
   }
 
   .custom-table {
     display: block;
-    overflow-x: auto; /* السماح بالتمرير الأفقي */
-    -webkit-overflow-scrolling: touch; /* تحسين التمرير على iOS */
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
   }
 
   .custom-table th,
   .custom-table td {
-    font-size: 12px; /* تقليل حجم الخط */
-    padding: 6px; /* تقليل الـ padding */
-    min-width: 80px; /* ضمان عرض مناسب للخلايا */
+    font-size: 12px;
+    padding: 6px;
+    min-width: 80px;
   }
 
-  /* إخفاء عمود الـ Role */
   .custom-table th:nth-child(4),
   .custom-table td:nth-child(4) {
     display: none;
   }
 
-  /* تقليل عرض عمود الـ Actions */
   .custom-table th:nth-child(5),
   .custom-table td:nth-child(5) {
     min-width: 100px;
   }
 
   .action-btn {
-    padding: 6px 8px; /* تقليل حجم الأزرار */
+    padding: 6px 8px;
     margin: 0 2px;
   }
 
   .search-container {
     width: 100%;
-    margin-bottom: 1rem; /* إضافة مسافة تحت الـ search bar */
+    margin-bottom: 1rem;
   }
 
   .search-input {
-    font-size: 14px; /* تقليل حجم الخط */
+    font-size: 14px;
   }
 }
-/* Cards للموبايل */
 .users-cards {
   display: flex;
   flex-direction: column;

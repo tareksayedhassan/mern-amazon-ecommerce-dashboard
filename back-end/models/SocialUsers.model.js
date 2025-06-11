@@ -22,7 +22,6 @@ const SocialUsers = new mongoose.Schema(
     password: {
       type: String,
       required: function () {
-        // Password مطلوب لو مفيش googleId (يعني تسجيل عادي)
         return !this.googleId;
       },
     },
@@ -39,7 +38,7 @@ const SocialUsers = new mongoose.Schema(
 
     role: {
       type: String,
-      enum: ["admin", "writer", "user"],
+      enum: ["admin", "writer", "user", "product manager"],
       default: "user",
     },
   },

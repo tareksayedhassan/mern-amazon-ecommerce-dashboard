@@ -1,4 +1,10 @@
-import { faFeather, faPlus, faUsers } from "@fortawesome/free-solid-svg-icons";
+import {
+  faFeather,
+  faIcons,
+  faPlus,
+  faTasks,
+  faUsers,
+} from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import React, { useContext } from "react";
 import { NavLink } from "react-router-dom";
@@ -92,6 +98,46 @@ const SideBar = ({ role }) => {
             style={{ display: isOpen ? "block" : "none" }}
           >
             Writer{" "}
+          </span>
+        </NavLink>
+      )}
+      {(role === "admin" || role === "product manager") && (
+        <NavLink
+          to={"product-manager"}
+          className={({ isActive }) =>
+            isActive ? "nav-icon active" : "nav-icon"
+          }
+        >
+          <FontAwesomeIcon
+            icon={faTasks}
+            className="icon"
+            style={{ padding: isOpen ? "10px 8px 10px 15px" : "10px 13px" }}
+          />
+          <span
+            className="label"
+            style={{ display: isOpen ? "block" : "none" }}
+          >
+            product manager
+          </span>
+        </NavLink>
+      )}
+      {(role === "admin" || role === "product manager") && (
+        <NavLink
+          to={"add-category"}
+          className={({ isActive }) =>
+            isActive ? "nav-icon active" : "nav-icon"
+          }
+        >
+          <FontAwesomeIcon
+            icon={faIcons}
+            className="icon"
+            style={{ padding: isOpen ? "10px 8px 10px 15px" : "10px 13px" }}
+          />
+          <span
+            className="label"
+            style={{ display: isOpen ? "block" : "none" }}
+          >
+            Add Category
           </span>
         </NavLink>
       )}

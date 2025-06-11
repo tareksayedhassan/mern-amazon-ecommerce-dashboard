@@ -8,14 +8,19 @@ import MenuContext from "./context/menuContext";
 import WindowContext from "./context/WindowContext";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "bootstrap/dist/js/bootstrap.bundle.min.js";
+import { PrimeReactProvider } from "primereact/api";
+
+import "primereact/resources/themes/lara-light-cyan/theme.css";
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(
   <React.StrictMode>
-    <WindowContext>
-      <MenuContext>
-        <RouterProvider router={Router} />
-      </MenuContext>
-    </WindowContext>
+    <PrimeReactProvider>
+      <WindowContext>
+        <MenuContext>
+          <RouterProvider router={Router} />
+        </MenuContext>
+      </WindowContext>
+    </PrimeReactProvider>
   </React.StrictMode>
 );

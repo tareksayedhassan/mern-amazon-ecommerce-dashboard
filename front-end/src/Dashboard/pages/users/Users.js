@@ -12,6 +12,7 @@ import Util from "./util";
 const Users = () => {
   const cookie = Cookie();
   const token = cookie.get("Bearer");
+
   const [users, setUsers] = useState([]);
   const [filteredUsers, setFilteredUsers] = useState([]);
   const [loading, setLoading] = useState(false);

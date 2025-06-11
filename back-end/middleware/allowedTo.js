@@ -17,6 +17,13 @@ module.exports = (...roles) => {
     ) {
       return next();
     }
+    if (
+      req.user.role === "product manager" &&
+      req.params.id &&
+      req.params.id === req.user.id
+    ) {
+      return next();
+    }
 
     if (!roles.includes(req.user.role)) {
       return next(

@@ -1,0 +1,26 @@
+/* Table.css */
+
+.p-datatable {
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.p-datatable thead th {
+  background-color: #f0f2f5;
+  color: #333;
+  font-weight: bold;
+}
+
+.p-datatable tbody td {
+  padding: 1rem;
+}
+
+.action-buttons {
+  display: flex;
+  gap: 0.5rem;
+  justify-content: center;
+}
+
+.p-button {
+  font-size: 0.9rem;
+}

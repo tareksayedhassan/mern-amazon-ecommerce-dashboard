@@ -28,7 +28,7 @@ const RequiredAuth = () => {
   }, [token]);
 
   if (loading) return <div>Loading...</div>;
-
+  if (userRole === "user") return <ErrorPage />;
   if (!userRole) return <ErrorPage />;
 
   return <Outlet context={{ role: userRole }} />;
