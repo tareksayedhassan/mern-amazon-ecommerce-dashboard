@@ -1,8 +1,7 @@
-// ProductManager.js
 import React, { useEffect, useState } from "react";
 import { Axios } from "../../../Api/Axios";
 import Cookie from "cookie-universal";
-import { GET_GATEGORY } from "../../../Api/APi";
+import { BASE_URL, DELETE_CATEGORY, GET_GATEGORY } from "../../../Api/APi";
 import { toast, ToastContainer } from "react-toastify";
 import { useNavigate } from "react-router-dom";
 import "react-toastify/dist/ReactToastify.css";
@@ -10,8 +9,9 @@ import "./Table.css";
 import { DataTable } from "primereact/datatable";
 import { Column } from "primereact/column";
 import { Button } from "primereact/button";
+import axios from "axios";
 
-const ProductManager = () => {
+const Categories = () => {
   const [category, setCategory] = useState([]);
   const cookie = Cookie();
   const token = cookie.get("Bearer");
@@ -40,9 +40,23 @@ const ProductManager = () => {
   const editCategory = (rowData) => {
     navigate(`/dashboard/edit-Category/${rowData._id}`);
   };
+  const deleteCategory = async (id) => {
+    const confirmDelete = window.confirm(
+      "Are you sure you want to delete this category?"
+    );
+    if (!confirmDelete) return;
 
-  const deleteCategory = (id) => {
-    console.log("Delete category:", id);
+    try {
+      await axios.delete(`${BASE_URL}/${DELETE_CATEGORY}/${id}`, {
+        headers: { Authorization: `Bearer ${token}` },
+      });
+
+      setCategory((prev) => prev.filter((cat) => cat._id !== id));
+      toast.success("Category deleted successfully");
+    } catch (error) {
+      toast.error("Failed to delete category");
+      console.error("Delete Error:", error);
+    }
   };
 
   const imageBodyTemplate = (rowData) => {
@@ -118,4 +132,4 @@ const ProductManager = () => {
   );
 };
 
-export default ProductManager;
+export default Categories;

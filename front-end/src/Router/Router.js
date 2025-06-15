@@ -12,9 +12,11 @@ import AddUser from "../Dashboard/pages/users/AddUser";
 import Writer from "../Dashboard/pages/Writer/Writer";
 import RoleBasedRoute from "../pages/auth/RoleBasedRoute";
 import RequireBack from "../pages/auth/RequireBack";
-import ProductManager from "../Dashboard/pages/ProductManager/ProductManager";
+import Categories from "../Dashboard/pages/Categorys/categories";
 import AddCategory from "../Dashboard/pages/Categorys/AddCategory";
 import EditCategory from "../Dashboard/pages/Categorys/EditCategory";
+import Products from "../Dashboard/pages/Products/Products";
+import AddProducts from "../Dashboard/pages/Products/AddProducts";
 
 const Router = createBrowserRouter([
   {
@@ -59,8 +61,8 @@ const Router = createBrowserRouter([
                 ),
                 children: [
                   {
-                    path: "product-manager",
-                    element: <ProductManager />,
+                    path: "categories",
+                    element: <Categories />,
                   },
                   {
                     path: "add-category",
@@ -69,6 +71,14 @@ const Router = createBrowserRouter([
                   {
                     path: "edit-Category/:id",
                     element: <EditCategory />,
+                  },
+                  {
+                    path: "products",
+                    element: <Products />,
+                  },
+                  {
+                    path: "add/products",
+                    element: <AddProducts />,
                   },
                 ],
               },

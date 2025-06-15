@@ -47,11 +47,13 @@ app.use(passport.session());
 const users = require("./Routes/users");
 const auth = require("./Routes/auth");
 const Category = require("./Routes/Category");
+const products = require("./Routes/Products");
 const { Error } = require("./utils/httpStatusText");
 
 app.use("/api/auth", auth);
 app.use("/api/user", users);
 app.use("/api/category", Category);
+app.use("/api/products", products);
 
 app.listen(port, () => {
   console.log(`Server is running on port ${port}`);

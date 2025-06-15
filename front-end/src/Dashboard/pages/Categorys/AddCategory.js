@@ -50,7 +50,7 @@ const AddCategory = () => {
           isLoading: false,
           autoClose: 3000,
         });
-        navigate("/dashboard/product-manager");
+        navigate("/dashboard/categories");
       } else {
         toast.update(toastId, {
           render: "Failed to add category!",

@@ -5,12 +5,9 @@ const allowedTo = require("../middleware/allowedTo");
 const multer = require("multer");
 
 const {
-  AddCategory,
-  getAllCategoryes,
-  UpdateCategory,
-  deleteCategory,
-  getSingleCategory,
-} = require("../controllers/CategoryController");
+  addProduct,
+  getAllProducts,
+} = require("../controllers/ProductController");
 
 const diskStorage = multer.diskStorage({
   destination: function (req, file, cb) {
@@ -36,12 +33,13 @@ const upload = multer({ storage: diskStorage, fileFilter });
 
 const adminOnly = [verifyToken, allowedTo("admin", "product manager")];
 
-router.post("/", adminOnly, upload.single("image"), AddCategory);
+router.post("/", adminOnly, upload.array("image", 10), addProduct);
 
-router.get("/", getAllCategoryes);
+router.get("/", adminOnly, getAllProducts);
 
-router.delete("/:id", adminOnly, deleteCategory);
+// router.delete("/:id", adminOnly);
 
-router.patch("/:id", upload.single("image"), adminOnly, UpdateCategory);
-router.get("/:id", upload.single("image"), adminOnly, getSingleCategory);
+// router.patch("/:id", upload.single("image"), adminOnly);
+// router.get("/:id", upload.single("image"), adminOnly);
+
 module.exports = router;

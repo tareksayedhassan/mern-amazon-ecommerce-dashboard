@@ -1,7 +1,9 @@
 import {
+  faAdd,
   faFeather,
   faIcons,
   faPlus,
+  faProjectDiagram,
   faTasks,
   faUsers,
 } from "@fortawesome/free-solid-svg-icons";
@@ -103,7 +105,7 @@ const SideBar = ({ role }) => {
       )}
       {(role === "admin" || role === "product manager") && (
         <NavLink
-          to={"product-manager"}
+          to={"categories"}
           className={({ isActive }) =>
             isActive ? "nav-icon active" : "nav-icon"
           }
@@ -117,10 +119,11 @@ const SideBar = ({ role }) => {
             className="label"
             style={{ display: isOpen ? "block" : "none" }}
           >
-            product manager
+            categories
           </span>
         </NavLink>
       )}
+
       {(role === "admin" || role === "product manager") && (
         <NavLink
           to={"add-category"}
@@ -138,6 +141,47 @@ const SideBar = ({ role }) => {
             style={{ display: isOpen ? "block" : "none" }}
           >
             Add Category
+          </span>
+        </NavLink>
+      )}
+
+      {(role === "admin" || role === "product manager") && (
+        <NavLink
+          to={"products"}
+          className={({ isActive }) =>
+            isActive ? "nav-icon active" : "nav-icon"
+          }
+        >
+          <FontAwesomeIcon
+            icon={faProjectDiagram}
+            className="icon"
+            style={{ padding: isOpen ? "10px 8px 10px 15px" : "10px 13px" }}
+          />
+          <span
+            className="label"
+            style={{ display: isOpen ? "block" : "none" }}
+          >
+            Products
+          </span>
+        </NavLink>
+      )}
+      {(role === "admin" || role === "product manager") && (
+        <NavLink
+          to={"add/products"}
+          className={({ isActive }) =>
+            isActive ? "nav-icon active" : "nav-icon"
+          }
+        >
+          <FontAwesomeIcon
+            icon={faAdd}
+            className="icon"
+            style={{ padding: isOpen ? "10px 8px 10px 15px" : "10px 13px" }}
+          />
+          <span
+            className="label"
+            style={{ display: isOpen ? "block" : "none" }}
+          >
+            Add Products
           </span>
         </NavLink>
       )}

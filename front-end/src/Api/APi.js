@@ -12,3 +12,10 @@ export const ADD_USER = "user";
 export const ADD_CATEGORY = "category";
 export const GET_GATEGORY = "category";
 export const UPDATE_CATEGORY = "category";
+export const DELETE_CATEGORY = "category";
+export const GET_SINGLE_CATEGORY = "category";
+// products
+
+export const ADD_PRODUCT = "products";
+
+export const GET_PRODUCT = "products";
