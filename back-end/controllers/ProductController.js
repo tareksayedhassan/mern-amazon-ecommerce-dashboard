@@ -3,6 +3,8 @@ const asyncWrapper = require("../middleware/asyncWrapper");
 const ProductModel = require("../models/Product.model");
 const AppError = require("../utils/appError");
 const { SUCCESS, FAIL } = require("../utils/httpStatusText");
+const path = require("path");
+const fs = require("fs");
 
 const addProduct = asyncWrapper(async (req, res, next) => {
   if (req.user.role !== "product manager" && req.user.role !== "admin") {
@@ -54,6 +56,27 @@ const addProduct = asyncWrapper(async (req, res, next) => {
   });
 });
 
+const getSingleProduct = asyncWrapper(async (req, res, next) => {
+  const baseUrl = `${req.protocol}://${req.get("host")}/uploads/`;
+
+  const product = await ProductModel.findById(req.params.id).lean();
+  if (!product) {
+    return next(new AppError("product not found", 404, FAIL));
+  }
+
+  const productWithImage = {
+    ...product,
+    image: Array.isArray(product.image)
+      ? product.image.map((img) => `${baseUrl}${img}`)
+      : [`${baseUrl}${product.image}`],
+  };
+
+  res.status(200).json({
+    status: SUCCESS,
+    data: productWithImage,
+  });
+});
+
 const getAllProducts = asyncWrapper(async (req, res, next) => {
   const baseUrl = `${req.protocol}://${req.get("host")}/uploads/`;
 
@@ -73,8 +96,120 @@ const getAllProducts = asyncWrapper(async (req, res, next) => {
     data: productsWithImage,
   });
 });
+const editPrducts = asyncWrapper(async (req, res, next) => {
+  if (req.user.role !== "product manager" && req.user.role !== "admin") {
+    return next(new AppError("Unauthorized", 401, FAIL));
+  }
+
+  const productId = req.params.id;
+
+  const {
+    title,
+    price,
+    description,
+    category,
+    rating,
+    ratings_number,
+    discount,
+    about,
+    status,
+  } = req.body;
+
+  const createdBy = new mongoose.Types.ObjectId(req.user.id);
+
+  const oldProduct = await ProductModel.findById(productId);
+  if (!oldProduct) {
+    return next(new AppError("Product not found", 404, FAIL));
+  }
+
+  const newImage =
+    req.files && req.files.length > 0
+      ? req.files.map((file) => file.filename)
+      : oldProduct.image;
+
+  if (req.file && oldProduct.image !== "category.webp") {
+    const oldImagePath = path.join(
+      __dirname,
+      "..",
+      "uploads",
+      oldProduct.image
+    );
+    if (fs.existsSync(oldImagePath)) {
+      fs.unlinkSync(oldImagePath);
+    }
+  }
+
+  const editProduct = await ProductModel.findByIdAndUpdate(
+    productId,
+    {
+      title,
+      price,
+      description,
+      category,
+      rating,
+      ratings_number,
+      discount,
+      about,
+      status,
+      image: newImage,
+      createdBy,
+    },
+    {
+      new: true,
+      runValidators: true,
+    }
+  );
+
+  const imageUrl = `${req.protocol}://${req.get("host")}/uploads/${
+    editProduct.image
+  }`;
+
+  res.status(200).json({
+    status: SUCCESS,
+    data: {
+      ...editProduct.toObject(),
+      image: imageUrl,
+    },
+  });
+});
+
+const deleteProducts = asyncWrapper(async (req, res, next) => {
+  const product = await ProductModel.findByIdAndDelete(req.params.id);
+
+  if (!product) {
+    return next(new AppError("product not found", 404, FAIL));
+  }
+
+  try {
+    if (Array.isArray(product.image)) {
+      product.image.forEach((fileName) => {
+        if (fileName !== "category.webp") {
+          const filePath = path.join(__dirname, "..", "uploads", fileName);
+          if (fs.existsSync(filePath)) {
+            fs.unlinkSync(filePath);
+          }
+        }
+      });
+    } else if (product.image !== "category.webp") {
+      const filePath = path.join(__dirname, "..", "uploads", product.image);
+      if (fs.existsSync(filePath)) {
+        fs.unlinkSync(filePath);
+      }
+    }
+  } catch (error) {
+    console.error("Error deleting image:", error.message);
+  }
+
+  res.status(200).json({
+    status: SUCCESS,
+    message: "product deleted successfully",
+  });
+});
 
 module.exports = {
   addProduct,
   getAllProducts,
+  getSingleProduct,
+  deleteProducts,
+  editPrducts,
 };

@@ -19,3 +19,6 @@ export const GET_SINGLE_CATEGORY = "category";
 export const ADD_PRODUCT = "products";
 
 export const GET_PRODUCT = "products";
+export const GET_SINGLE_PRODUCT = "products";
+export const DELETE_PRODUCT = "products";
+export const EDIT_PRODUCT = "products";

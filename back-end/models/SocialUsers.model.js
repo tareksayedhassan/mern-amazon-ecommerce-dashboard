@@ -38,7 +38,7 @@ const SocialUsers = new mongoose.Schema(
 
     role: {
       type: String,
-      enum: ["admin", "writer", "user", "product manager"],
+      enum: ["admin", "user", "product manager"],
       default: "user",
     },
   },

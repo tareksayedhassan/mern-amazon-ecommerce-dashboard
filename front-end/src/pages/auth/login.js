@@ -1,5 +1,5 @@
 import axios from "axios";
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { BASE_URL, LOGIN } from "../../Api/APi";
 import Loading from "../../Loading/Loading";
@@ -30,11 +30,7 @@ const Login = () => {
       cookie.set("Bearer", token);
       setloading(false);
       setMessage("User logged in successfully");
-      if (
-        decoded.role == "admin" ||
-        decoded.role == "writer" ||
-        decoded.role == "product manager"
-      ) {
+      if (decoded.role == "admin" || decoded.role == "product manager") {
         navigate("/dashboard", { replace: true });
       } else {
         navigate("/", { replace: true });

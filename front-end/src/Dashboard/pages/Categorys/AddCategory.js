@@ -1,4 +1,4 @@
-import React, { useState, useContext } from "react";
+import React, { useState, useContext, useMemo } from "react";
 import Form from "react-bootstrap/Form";
 import Button from "react-bootstrap/Button";
 import { useNavigate } from "react-router-dom";
@@ -18,7 +18,7 @@ const AddCategory = () => {
 
   const cookie = Cookie();
   const token = cookie.get("Bearer");
-  const decoded = jwtDecode(token);
+  const decoded = useMemo(() => jwtDecode(token), [token]);
   const { windowSize } = useContext(WindowSize);
   const navigate = useNavigate();
 

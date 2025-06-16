@@ -122,7 +122,6 @@ const AddUser = () => {
             >
               <option value="">-- Select a role --</option>
               <option value="admin">Admin</option>
-              <option value="writer">Writer</option>
               <option value="user">User</option>
               <option value="product manager">Product Manager</option>
             </Form.Select>

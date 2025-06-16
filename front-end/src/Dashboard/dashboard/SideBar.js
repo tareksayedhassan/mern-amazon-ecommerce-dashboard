@@ -83,26 +83,6 @@ const SideBar = ({ role }) => {
         </>
       )}
 
-      {(role === "admin" || role === "writer") && (
-        <NavLink
-          to={"writer"}
-          className={({ isActive }) =>
-            isActive ? "nav-icon active" : "nav-icon"
-          }
-        >
-          <FontAwesomeIcon
-            icon={faFeather}
-            className="icon"
-            style={{ padding: isOpen ? "10px 8px 10px 15px" : "10px 13px" }}
-          />
-          <span
-            className="label"
-            style={{ display: isOpen ? "block" : "none" }}
-          >
-            Writer{" "}
-          </span>
-        </NavLink>
-      )}
       {(role === "admin" || role === "product manager") && (
         <NavLink
           to={"categories"}

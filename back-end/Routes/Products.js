@@ -7,6 +7,9 @@ const multer = require("multer");
 const {
   addProduct,
   getAllProducts,
+  getSingleProduct,
+  deleteProducts,
+  editPrducts,
 } = require("../controllers/ProductController");
 
 const diskStorage = multer.diskStorage({
@@ -37,9 +40,9 @@ router.post("/", adminOnly, upload.array("image", 10), addProduct);
 
 router.get("/", adminOnly, getAllProducts);
 
-// router.delete("/:id", adminOnly);
+router.get("/:id", adminOnly, getSingleProduct);
+router.delete("/:id", adminOnly, deleteProducts);
 
-// router.patch("/:id", upload.single("image"), adminOnly);
-// router.get("/:id", upload.single("image"), adminOnly);
+router.patch("/:id", upload.array("image", 10), adminOnly, editPrducts);
 
 module.exports = router;

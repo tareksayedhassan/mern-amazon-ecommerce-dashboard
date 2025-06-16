@@ -109,7 +109,6 @@ const EditUser = () => {
             >
               <option value="">-- Select a role --</option>
               <option value="admin">Admin</option>
-              <option value="writer">Writer</option>
               <option value="user">User</option>
             </Form.Select>
           </Form.Group>

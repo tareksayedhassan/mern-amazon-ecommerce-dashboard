@@ -10,11 +10,7 @@ module.exports = (...roles) => {
       return next();
     }
 
-    if (
-      req.user.role === "writer" &&
-      req.params.id &&
-      req.params.id === req.user.id
-    ) {
+    if (req.params.id && req.params.id === req.user.id) {
       return next();
     }
     if (

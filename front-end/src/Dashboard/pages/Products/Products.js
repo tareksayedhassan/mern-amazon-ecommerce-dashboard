@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { GET_PRODUCT } from "../../../Api/APi";
+import { DELETE_PRODUCT, GET_PRODUCT } from "../../../Api/APi";
 import { Axios } from "../../../Api/Axios";
 import { DataTable } from "primereact/datatable";
 import { Column } from "primereact/column";
@@ -10,6 +10,8 @@ import { Galleria } from "primereact/galleria";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import Cookie from "cookie-universal";
+import { Button } from "primereact/button";
+import { useNavigate } from "react-router-dom";
 
 const Products = () => {
   const [products, setProducts] = useState([]);
@@ -19,7 +21,7 @@ const Products = () => {
 
   const cookie = Cookie();
   const token = cookie.get("Bearer");
-
+  const navigate = useNavigate();
   const fetchProducts = async () => {
     try {
       const res = await Axios.get(`/${GET_PRODUCT}`, {
@@ -136,7 +138,26 @@ const Products = () => {
       style={{ width: 50, height: 50, objectFit: "cover", display: "block" }}
     />
   );
+  const DELETEPRODUCT = async (id) => {
+    const confirmDelete = window.confirm(
+      "Are you sure you want to delete this Product?"
+    );
+    if (!confirmDelete) return;
 
+    try {
+      await Axios.delete(`/${DELETE_PRODUCT}/${id}`);
+
+      setProducts((prev) => prev.filter((pro) => pro._id !== id));
+      toast.success("Product deleted successfully");
+    } catch (error) {
+      toast.error("Failed to delete Product");
+      console.error("Delete Error:", error);
+    }
+  };
+
+  const editProduct = (rowData) => {
+    navigate(`/dashboard/edit/products/${rowData._id}`);
+  };
   return (
     <div className="card">
       <ToastContainer position="top-right" autoClose={3000} theme="colored" />
@@ -155,9 +176,30 @@ const Products = () => {
         <Column field="discount" header="Discount" />
         <Column field="about" header="About" />
         <Column field="description" header="Description" />
-        <Column field="ratings_number" header="# Ratings" />
+        <Column field="ratings_number" header="Ratings" />
         <Column header="Rating" body={ratingBodyTemplate} />
         <Column header="Status" body={statusBodyTemplate} />
+        <Column
+          header="Actions"
+          body={(rowData) => (
+            <div className="action-buttons">
+              <Button
+                label="Edit"
+                severity="secondary"
+                rounded
+                onClick={() => editProduct(rowData)}
+                className="p-button-sm"
+              />
+              <Button
+                label="Delete"
+                severity="danger"
+                rounded
+                onClick={() => DELETEPRODUCT(rowData._id)}
+                className="p-button-sm"
+              />
+            </div>
+          )}
+        />
       </DataTable>
 
       <Dialog

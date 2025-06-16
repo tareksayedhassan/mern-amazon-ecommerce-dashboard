@@ -1,8 +1,13 @@
-import React, { useState, useContext, useEffect, useMemo, useRef } from "react";
+import React, { useState, useContext, useEffect, useMemo } from "react";
 import Form from "react-bootstrap/Form";
 import Button from "react-bootstrap/Button";
-import { useNavigate } from "react-router-dom";
-import { ADD_PRODUCT, BASE_URL, GET_GATEGORY } from "../../../Api/APi";
+import { useNavigate, useParams } from "react-router-dom";
+import {
+  GET_GATEGORY,
+  GET_SINGLE_PRODUCT,
+  EDIT_PRODUCT,
+  BASE_URL,
+} from "../../../Api/APi";
 import { Axios } from "../../../Api/Axios";
 import { toast } from "react-toastify";
 import Loading from "../../../Loading/Loading";
@@ -11,18 +16,18 @@ import Cookie from "cookie-universal";
 import { jwtDecode } from "jwt-decode";
 import { Image } from "primereact/image";
 
-const AddProducts = () => {
-  const [category, setcategory] = useState("");
-  const [title, settitle] = useState("");
+const EditProduct = () => {
+  const [category, setCategory] = useState("");
+  const [title, setTitle] = useState("");
   const [categoriesList, setCategoriesList] = useState([]);
   const [price, setPrice] = useState("");
   const [rating, setRating] = useState("");
-  const [rating_number, setRatingNumber] = useState("");
-  const [discount, setdiscount] = useState("");
-  const [about, setabout] = useState("");
+  const [ratingNumber, setRatingNumber] = useState("");
+  const [discount, setDiscount] = useState("");
+  const [about, setAbout] = useState("");
   const [status, setStatus] = useState("");
-  const [description, setdescription] = useState("");
-  const [image, setImages] = useState([]);
+  const [description, setDescription] = useState("");
+  const [imagesList, setImagesList] = useState([]);
   const [loading, setLoading] = useState(false);
 
   const cookie = Cookie();
@@ -30,24 +35,45 @@ const AddProducts = () => {
   const decoded = useMemo(() => jwtDecode(token), [token]);
   const { windowSize } = useContext(WindowSize);
   const navigate = useNavigate();
+  const { id } = useParams();
 
   const getAllCategories = async () => {
     try {
       const res = await Axios.get(`/${GET_GATEGORY}`);
       setCategoriesList(res.data.data);
-    } catch (err) {
+    } catch {
       toast.error("Can't get categories");
+    }
+  };
+
+  const getProductData = async () => {
+    try {
+      const res = await Axios.get(`/${GET_SINGLE_PRODUCT}/${id}`);
+      const data = res.data.data;
+      setCategory(data.category._id || data.category);
+      setTitle(data.title);
+      setPrice(data.price);
+      setDescription(data.description);
+      setRating(data.rating);
+      setRatingNumber(data.ratings_number);
+      setDiscount(data.discount);
+      setAbout(data.about);
+      setStatus(data.status);
+      setImagesList(data.image.map((url) => ({ url })));
+    } catch {
+      toast.error("Can't fetch product data");
     }
   };
 
   useEffect(() => {
     getAllCategories();
-  }, []);
+    getProductData();
+  }, [id]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
-    const toastId = toast.loading("Adding Product...");
+    const toastId = toast.loading("Updating Product...");
     try {
       const formData = new FormData();
       formData.append("category", category);
@@ -56,27 +82,24 @@ const AddProducts = () => {
       formData.append("description", description);
       formData.append("createdBy", decoded.id);
       formData.append("rating", rating);
-      formData.append("ratings_number", rating_number);
+      formData.append("ratings_number", ratingNumber);
       formData.append("discount", discount);
       formData.append("about", about);
       formData.append("status", status);
-      if (image && image.length > 0) {
-        image.forEach((img) => {
-          formData.append("image", img);
-        });
-      }
 
-      const res = await Axios.post(`${BASE_URL}/${ADD_PRODUCT}`, formData, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-          "Content-Type": "multipart/form-data",
-        },
+      imagesList.forEach((img) => {
+        if (img instanceof File) {
+          formData.append("image", img);
+        }
+      });
+
+      const res = await Axios.patch(`/${EDIT_PRODUCT}/${id}`, formData, {
         withCredentials: true,
       });
 
       if (res.data.status === "success") {
         toast.update(toastId, {
-          render: "Product added successfully!",
+          render: "Product updated successfully!",
           type: "success",
           isLoading: false,
           autoClose: 3000,
@@ -84,20 +107,19 @@ const AddProducts = () => {
         navigate("/dashboard/products");
       } else {
         toast.update(toastId, {
-          render: "Failed to add product!",
+          render: "Failed to update product!",
           type: "error",
           isLoading: false,
           autoClose: 3000,
         });
       }
-    } catch (error) {
+    } catch {
       toast.update(toastId, {
         render: "Something went wrong!",
         type: "error",
         isLoading: false,
         autoClose: 3000,
       });
-      console.error("Add product error:", error);
     } finally {
       setLoading(false);
     }
@@ -111,10 +133,12 @@ const AddProducts = () => {
     flexDirection: "column",
     alignItems: "center",
   };
+
   const removeImage = (index) => {
-    setImages((prev) => prev.filter((_, i) => i !== index));
+    setImagesList((prev) => prev.filter((_, i) => i !== index));
   };
-  const images = (
+
+  const imagesPreview = (
     <div
       style={{
         display: "flex",
@@ -124,10 +148,14 @@ const AddProducts = () => {
         marginBottom: "1rem",
       }}
     >
-      {image.map((item, key) => (
+      {imagesList.map((item, key) => (
         <div key={key} style={{ position: "relative", flex: "0 0 auto" }}>
           <Image
-            src={URL.createObjectURL(item)}
+            src={
+              item instanceof File
+                ? URL.createObjectURL(item)
+                : `${BASE_URL}/${item.url}`
+            }
             alt={`preview-${key}`}
             preview
             imageClassName={`custom-preview-image-${key}`}
@@ -177,17 +205,13 @@ const AddProducts = () => {
     <>
       {loading && <Loading />}
       <div className="edit-user-container" style={containerStyle}>
-        <h3 className="mb-4 text-center">Add Product</h3>
-
-        <Form
-          onSubmit={handleSubmit}
-          style={{ width: "100%", maxWidth: "1650px" }}
-        >
-          <Form.Group className="mb-3" controlId="categorySelect">
+        <h3 className="mb-4 text-center">Edit Product</h3>
+        <Form onSubmit={handleSubmit} style={{ width: "100%" }}>
+          <Form.Group className="mb-3">
             <Form.Label>Select Category:</Form.Label>
             <Form.Select
               value={category}
-              onChange={(e) => setcategory(e.target.value)}
+              onChange={(e) => setCategory(e.target.value)}
               required
             >
               <option value="">-- Select a category --</option>
@@ -198,17 +222,19 @@ const AddProducts = () => {
               ))}
             </Form.Select>
           </Form.Group>
-          <Form.Group className="mb-3" controlId="formtitle">
+
+          <Form.Group className="mb-3">
             <Form.Label>Title</Form.Label>
             <Form.Control
               type="text"
               placeholder="Product title"
               value={title}
-              onChange={(e) => settitle(e.target.value)}
+              onChange={(e) => setTitle(e.target.value)}
               required
             />
           </Form.Group>
-          <Form.Group className="mb-3" controlId="formPrice">
+
+          <Form.Group className="mb-3">
             <Form.Label>Price</Form.Label>
             <Form.Control
               type="number"
@@ -218,59 +244,65 @@ const AddProducts = () => {
               required
             />
           </Form.Group>
-          <Form.Group className="mb-3" controlId="formDescription">
+
+          <Form.Group className="mb-3">
             <Form.Label>Description</Form.Label>
             <Form.Control
               type="text"
               placeholder="Description"
               value={description}
-              onChange={(e) => setdescription(e.target.value)}
+              onChange={(e) => setDescription(e.target.value)}
               required
             />
           </Form.Group>
-          <Form.Group className="mb-3" controlId="formRating">
+
+          <Form.Group className="mb-3">
             <Form.Label>Rating</Form.Label>
             <Form.Control
               type="number"
+              max={5}
               placeholder="Rating"
-              maxLength={5}
               value={rating}
               onChange={(e) => setRating(e.target.value)}
               required
             />
           </Form.Group>
-          <Form.Group className="mb-3" controlId="formRatingNumber">
+
+          <Form.Group className="mb-3">
             <Form.Label>Rating Number</Form.Label>
             <Form.Control
               type="number"
               placeholder="Number of Ratings"
-              value={rating_number}
+              value={ratingNumber}
               onChange={(e) => setRatingNumber(e.target.value)}
               required
             />
           </Form.Group>
-          <Form.Group className="mb-3" controlId="formdiscount">
+
+          <Form.Group className="mb-3">
             <Form.Label>Discount</Form.Label>
             <Form.Control
               type="text"
               placeholder="Discount"
               value={discount}
-              onChange={(e) => setdiscount(e.target.value)}
+              onChange={(e) => setDiscount(e.target.value)}
               required
             />
           </Form.Group>
-          <Form.Group className="mb-3" controlId="formabout">
+
+          <Form.Group className="mb-3">
             <Form.Label>About</Form.Label>
             <Form.Control
               type="text"
-              placeholder="about"
+              placeholder="About"
               value={about}
-              onChange={(e) => setabout(e.target.value)}
+              onChange={(e) => setAbout(e.target.value)}
               required
             />
           </Form.Group>
-          <Form.Group className="mb-3" controlId="categorySelect">
-            <Form.Label>Select Status:</Form.Label>
+
+          <Form.Group className="mb-3">
+            <Form.Label>Status:</Form.Label>
             <Form.Select
               value={status}
               onChange={(e) => setStatus(e.target.value)}
@@ -285,11 +317,8 @@ const AddProducts = () => {
               <option value="Sold Out">Sold Out</option>
             </Form.Select>
           </Form.Group>
-          <Form.Group
-            className="mb-3"
-            controlId="formImage"
-            style={{ width: "100%", display: "flex", justifyContent: "center" }}
-          >
+
+          <Form.Group className="mb-3" style={{ textAlign: "center" }}>
             <input
               type="file"
               id="upload-images"
@@ -299,13 +328,13 @@ const AddProducts = () => {
                 const filesArray = Array.from(e.target.files);
                 const uniqueFiles = filesArray.filter(
                   (file) =>
-                    !image.some(
+                    !imagesList.some(
                       (img) =>
                         img.name === file.name &&
                         img.lastModified === file.lastModified
                     )
                 );
-                setImages((prev) => [...prev, ...uniqueFiles]);
+                setImagesList((prev) => [...prev, ...uniqueFiles]);
                 e.target.value = null;
               }}
               style={{ display: "none" }}
@@ -334,16 +363,16 @@ const AddProducts = () => {
               <span>Upload Images</span>
             </label>
           </Form.Group>
-          <div>{images}</div>
-          <div className="d-flex justify-content-center">
-            <Button variant="primary" type="submit">
-              Add Product
-            </Button>
-          </div>
+
+          {imagesPreview}
+
+          <Button variant="primary" type="submit" disabled={loading}>
+            Save Changes
+          </Button>
         </Form>
       </div>
     </>
   );
 };
 
-export default AddProducts;
+export default EditProduct;
