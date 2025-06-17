@@ -76,11 +76,18 @@ const getSingleProduct = asyncWrapper(async (req, res, next) => {
     data: productWithImage,
   });
 });
-
 const getAllProducts = asyncWrapper(async (req, res, next) => {
+  const { page = 1, limit = 10, search = "" } = req.query;
+  const skip = (parseInt(page) - 1) * parseInt(limit);
   const baseUrl = `${req.protocol}://${req.get("host")}/uploads/`;
 
-  const products = await ProductModel.find()
+  const searchQuery = search ? { name: { $regex: search, $options: "i" } } : {};
+
+  const total = await ProductModel.countDocuments(searchQuery);
+
+  const products = await ProductModel.find(searchQuery, { __v: 0 })
+    .limit(parseInt(limit))
+    .skip(skip)
     .populate("category", "name")
     .lean();
 
@@ -93,9 +100,13 @@ const getAllProducts = asyncWrapper(async (req, res, next) => {
 
   res.status(200).json({
     status: SUCCESS,
+    page: Number(page),
+    limit: Number(limit),
+    total,
     data: productsWithImage,
   });
 });
+
 const editPrducts = asyncWrapper(async (req, res, next) => {
   if (req.user.role !== "product manager" && req.user.role !== "admin") {
     return next(new AppError("Unauthorized", 401, FAIL));

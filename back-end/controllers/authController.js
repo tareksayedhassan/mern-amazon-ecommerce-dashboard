@@ -8,82 +8,133 @@ const generateJWT = require("../utils/generateJWT");
 const GoogleStrategy = require("passport-google-oauth2").Strategy;
 const passport = require("passport");
 const session = require("express-session");
-
 const register = asyncWrapper(async (req, res, next) => {
   const { name, email, password, confirmPassword, role } = req.body;
 
   if (password !== confirmPassword) {
-    const error = new AppError(
-      "Password and confirm password do not match",
-      400,
-      FAIL
+    return next(
+      new AppError("Password and confirm password do not match", 400, FAIL)
     );
-    return next(error);
   }
 
   const oldUser = await usersModel.findOne({ email });
   if (oldUser) {
-    const error = new AppError("User already exists", 400, FAIL);
-    return next(error);
+    return next(new AppError("User already exists", 400, FAIL));
   }
 
   const hashedPassword = await bcrypt.hash(password, 10);
-  const newUser = usersModel({
+
+  const newUser = new usersModel({
     name,
     email,
     password: hashedPassword,
     role,
   });
 
-  const token = await generateJWT({
+  const { token, refreshToken } = await generateJWT({
     email: newUser.email,
     id: newUser.id,
     role: newUser.role,
   });
+
   newUser.token = token;
+  newUser.refreshToken = refreshToken;
+
   await newUser.save();
 
   res.status(201).json({
     status: SUCCESS,
     message: "User registered successfully",
     code: 201,
-    data: newUser,
+    data: {
+      user: {
+        id: newUser._id,
+        name: newUser.name,
+        email: newUser.email,
+        role: newUser.role,
+      },
+      token,
+      refreshToken,
+    },
+  });
+});
+const login = asyncWrapper(async (req, res, next) => {
+  const { email, password } = req.body;
+
+  if (!email || !password) {
+    return next(new AppError("email and password are required", 400, FAIL));
+  }
+
+  const user = await usersModel.findOne({ email });
+  if (!user) {
+    return next(new AppError("user not exists", 404, ERROR));
+  }
+
+  const matchedPassword = await bcrypt.compare(password, user.password);
+
+  if (!matchedPassword) {
+    return next(new AppError("invalid credentials", 401, ERROR));
+  }
+
+  const { token, refreshToken } = await generateJWT({
+    email: user.email,
+    id: user._id,
+    role: user.role,
+  });
+
+  user.token = token;
+  user.refreshToken = refreshToken;
+  await user.save();
+
+  res.status(200).json({
+    status: SUCCESS,
+    message: "User Logged successfully",
+    data: {
+      user: {
+        id: user._id,
+        name: user.name,
+        email: user.email,
+        role: user.role,
+      },
+      token,
+      refreshToken,
+    },
   });
 });
 
-const login = asyncWrapper(async (req, res, next) => {
-  const { email, password } = req.body;
-  if (!email || !password) {
-    const error = new AppError("email and password are required", 400, FAIL);
-    return next(error);
+const refreshTokenHandler = asyncWrapper(async (req, res, next) => {
+  const { refreshToken } = req.body;
+
+  if (!refreshToken) {
+    return next(new AppError("Refresh token is required", 400, "FAIL"));
   }
 
-  const user = await usersModel.findOne({ email: email });
-  if (!user) {
-    const error = new AppError("user not exists", 404, ERROR);
-    return next(error);
-  }
-  const matchedPassword = await bcrypt.compare(password, user.password);
-  if (user && matchedPassword) {
-    const token = await generateJWT({
-      email: user.email,
-      id: user._id,
-      role: user.role,
+  try {
+    const decoded = jwt.verify(
+      refreshToken,
+      process.env.JWT_REFRESH_SECRET_KEY
+    );
+
+    const { token, refreshToken: newRefreshToken } = await generateJWT({
+      id: decoded.id,
+      email: decoded.email,
+      role: decoded.role,
     });
-    return res.status(200).json({
-      status: SUCCESS,
-      message: "User Logged successfully",
-      data: { token },
+
+    res.status(200).json({
+      status: "SUCCESS",
+      message: "Access token refreshed",
+      accessToken: token,
+      refreshToken: newRefreshToken,
     });
-  } else {
-    const error = new AppError("something wrong", 500, ERROR);
-    return next(error);
+  } catch (err) {
+    return next(new AppError("Invalid or expired refresh token", 403, "FAIL"));
   }
 });
+module.exports = refreshTokenHandler;
 
-const googleLogin = asyncWrapper(async (req, res, next) => {});
 module.exports = {
   register,
   login,
-  googleLogin,
+  refreshTokenHandler,
 };

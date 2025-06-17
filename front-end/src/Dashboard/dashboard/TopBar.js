@@ -15,7 +15,7 @@ const Topbar = () => {
   const [name, setName] = useState("User");
 
   const cookie = Cookie();
-  const token = cookie.get("Bearer");
+  const token = cookie.get("accessToken");
   useEffect(() => {
     if (!token) return;
 

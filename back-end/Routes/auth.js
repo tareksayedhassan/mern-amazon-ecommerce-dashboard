@@ -1,6 +1,10 @@
 const express = require("express");
 const router = express.Router();
-const { register, login } = require("../controllers/authController");
+const {
+  register,
+  login,
+  refreshTokenHandler,
+} = require("../controllers/authController");
 const passport = require("passport");
 
 router.post("/register", register);
@@ -38,4 +42,5 @@ router.get("/hello", isLoggedIn, (req, res) => {
   res.send(`Welcome ${req.user.displayName}`);
 });
 
+router.post("/refreshtoken", refreshTokenHandler);
 module.exports = router;

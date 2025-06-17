@@ -17,7 +17,7 @@ const AddCategory = () => {
   const [loading, setLoading] = useState(false);
 
   const cookie = Cookie();
-  const token = cookie.get("Bearer");
+  const token = cookie.get("accessToken");
   const decoded = useMemo(() => jwtDecode(token), [token]);
   const { windowSize } = useContext(WindowSize);
   const navigate = useNavigate();
@@ -37,7 +37,7 @@ const AddCategory = () => {
 
       const res = await Axios.post(`${BASE_URL}/${ADD_CATEGORY}`, formData, {
         headers: {
-          Authorization: `Bearer ${token}`,
+          Authorization: `accessToken ${token}`,
           "Content-Type": "multipart/form-data",
         },
         withCredentials: true,

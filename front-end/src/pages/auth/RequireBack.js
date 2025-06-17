@@ -4,7 +4,7 @@ import { Outlet, useNavigate } from "react-router-dom";
 
 const RequireBack = () => {
   const cookie = Cookie();
-  const token = cookie.get("Bearer");
+  const token = cookie.get("accessToken");
   const navigate = useNavigate();
 
   useEffect(() => {

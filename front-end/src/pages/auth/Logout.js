@@ -11,7 +11,9 @@ const Logout = () => {
 
   const handelDelete = () => {
     setLoading(true);
-    cookie.remove("Bearer");
+    cookie.remove("accessToken");
+    cookie.remove("refreshToken");
+
     setTimeout(() => {
       setLoading(false);
       navigate("/login");

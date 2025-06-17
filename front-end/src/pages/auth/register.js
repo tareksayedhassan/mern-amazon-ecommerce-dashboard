@@ -1,6 +1,5 @@
 import React, { useState } from "react";
 import { BASE_URL, REGISTER } from "../../Api/APi";
-import axios from "axios";
 import "./form.css";
 import "./button.css";
 import { useNavigate } from "react-router-dom";
@@ -8,6 +7,7 @@ import Loading from "../../Loading/Loading";
 import Cookie from "cookie-universal";
 import googleIcon from "../../assets/download.png";
 import "../../css/google.css";
+import { Axios } from "../../Api/Axios";
 const Register = () => {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
@@ -31,14 +31,18 @@ const Register = () => {
     }
 
     try {
-      const res = await axios.post(`${BASE_URL}/${REGISTER}`, {
+      const res = await Axios.post(`${BASE_URL}/${REGISTER}`, {
         name,
         email,
         password,
         confirmPassword,
       });
-      const token = res.data.data.token;
-      cookie.set("Bearer", token);
+
+      const accessToken = res.data.data?.token;
+      const refreshToken = res.data.data?.refreshToken;
+      cookie.set("accessToken", accessToken);
+      cookie.set("refreshToken", refreshToken);
+
       setloading(false);
       Navigate("/");
       setMessage("User registered successfully");

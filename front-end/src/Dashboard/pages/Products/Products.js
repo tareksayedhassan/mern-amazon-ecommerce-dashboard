@@ -12,22 +12,29 @@ import "react-toastify/dist/ReactToastify.css";
 import Cookie from "cookie-universal";
 import { Button } from "primereact/button";
 import { useNavigate } from "react-router-dom";
+import { InputText } from "primereact/inputtext";
+import { IconField } from "primereact/iconfield";
+import { InputIcon } from "primereact/inputicon";
 
 const Products = () => {
   const [products, setProducts] = useState([]);
+  const [filteredProducts, setFilteredProducts] = useState([]);
   const [visible, setVisible] = useState(false);
   const [selectedImages, setSelectedImages] = useState([]);
   const [activeIndex, setActiveIndex] = useState(0);
+  const [search, setSearch] = useState("");
 
   const cookie = Cookie();
-  const token = cookie.get("Bearer");
+  const token = cookie.get("accessToken");
   const navigate = useNavigate();
+
   const fetchProducts = async () => {
     try {
       const res = await Axios.get(`/${GET_PRODUCT}`, {
-        headers: { Authorization: `Bearer ${token}` },
+        headers: { Authorization: `accessToken ${token}` },
       });
       setProducts(res.data.data);
+      setFilteredProducts(res.data.data);
     } catch (err) {
       toast.error("Error loading products");
     }
@@ -47,6 +54,21 @@ const Products = () => {
     setVisible(true);
     setActiveIndex(0);
   };
+
+  useEffect(() => {
+    const result = products.filter(
+      (pro) =>
+        pro.title?.toLowerCase().includes(search.toLowerCase()) ||
+        pro.category?.name?.toLowerCase().includes(search.toLowerCase()) ||
+        pro.price?.toString().toLowerCase().includes(search.toLowerCase()) ||
+        pro.discount?.toString().toLowerCase().includes(search.toLowerCase()) ||
+        pro.ratings_number
+          ?.toString()
+          .toLowerCase()
+          .includes(search.toLowerCase())
+    );
+    setFilteredProducts(result);
+  }, [products, search]);
 
   const imageBodyTemplate = (product) => {
     if (
@@ -138,6 +160,7 @@ const Products = () => {
       style={{ width: 50, height: 50, objectFit: "cover", display: "block" }}
     />
   );
+
   const DELETEPRODUCT = async (id) => {
     const confirmDelete = window.confirm(
       "Are you sure you want to delete this Product?"
@@ -146,7 +169,6 @@ const Products = () => {
 
     try {
       await Axios.delete(`/${DELETE_PRODUCT}/${id}`);
-
       setProducts((prev) => prev.filter((pro) => pro._id !== id));
       toast.success("Product deleted successfully");
     } catch (error) {
@@ -158,16 +180,35 @@ const Products = () => {
   const editProduct = (rowData) => {
     navigate(`/dashboard/edit/products/${rowData._id}`);
   };
+
   return (
     <div className="card">
+      <div
+        style={{
+          display: "flex",
+          justifyContent: "flex-end",
+          marginBottom: "1px",
+        }}
+      >
+        <IconField iconPosition="left">
+          <InputIcon className="pi pi-search" />
+          <InputText
+            placeholder="Search"
+            value={search}
+            onChange={(e) => setSearch(e.target.value)}
+          />
+        </IconField>
+      </div>
+
       <ToastContainer position="top-right" autoClose={3000} theme="colored" />
 
       <DataTable
-        value={products}
+        value={filteredProducts}
         paginator
         rows={5}
         rowsPerPageOptions={[5, 10, 20]}
         tableStyle={{ minWidth: "60rem" }}
+        emptyMessage="No products found."
       >
         <Column field="title" header="Title" style={{ width: "15%" }} />
         <Column header="Image" body={imageBodyTemplate} />
@@ -182,7 +223,10 @@ const Products = () => {
         <Column
           header="Actions"
           body={(rowData) => (
-            <div className="action-buttons">
+            <div
+              className="action-buttons"
+              style={{ display: "flex", gap: "0.5rem" }}
+            >
               <Button
                 label="Edit"
                 severity="secondary"

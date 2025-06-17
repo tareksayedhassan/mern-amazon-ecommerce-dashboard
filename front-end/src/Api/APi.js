@@ -2,6 +2,7 @@
 export const BASE_URL = "http://localhost:4000/api";
 export const REGISTER = "auth/register";
 export const LOGIN = "auth/login";
+export const REFRESH_TOKEN = "auth/refreshtoken";
 // users
 export const USERS = "user";
 export const DELETE_USER = "user";

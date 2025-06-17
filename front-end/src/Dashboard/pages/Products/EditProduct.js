@@ -31,7 +31,7 @@ const EditProduct = () => {
   const [loading, setLoading] = useState(false);
 
   const cookie = Cookie();
-  const token = cookie.get("Bearer");
+  const token = cookie.get("accessToken");
   const decoded = useMemo(() => jwtDecode(token), [token]);
   const { windowSize } = useContext(WindowSize);
   const navigate = useNavigate();

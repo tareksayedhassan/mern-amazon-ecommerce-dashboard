@@ -1,5 +1,4 @@
 import { useState, useEffect, useContext } from "react";
-import axios from "axios";
 import { BASE_URL, USERS, DELETE_USER } from "../../../Api/APi";
 import Cookie from "cookie-universal";
 import { jwtDecode } from "jwt-decode";
@@ -12,10 +11,11 @@ import { faTrash, faEdit, faSearch } from "@fortawesome/free-solid-svg-icons";
 import { DataTable } from "primereact/datatable";
 import { Column } from "primereact/column";
 import "primereact/resources/themes/lara-light-blue/theme.css";
+import { Axios } from "../../../Api/Axios";
 
 const Users = () => {
   const cookie = Cookie();
-  const token = cookie.get("Bearer");
+  const token = cookie.get("accessToken");
 
   const [users, setUsers] = useState([]);
   const [filteredUsers, setFilteredUsers] = useState([]);
@@ -46,8 +46,8 @@ const Users = () => {
         const decoded = jwtDecode(token);
         const currentUserId = decoded.id;
 
-        const response = await axios.get(`${BASE_URL}/${USERS}`, {
-          headers: { Authorization: `Bearer ${token}` },
+        const response = await Axios.get(`${BASE_URL}/${USERS}`, {
+          headers: { Authorization: ` ${token}` },
         });
 
         const allUsers = response.data.data.users;
@@ -84,8 +84,8 @@ const Users = () => {
     try {
       setLoading(true);
       toast.info("Deleting user...");
-      await axios.delete(`${BASE_URL}/${DELETE_USER}/${id}`, {
-        headers: { Authorization: `Bearer ${token}` },
+      await Axios.delete(`/${DELETE_USER}/${id}`, {
+        headers: { Authorization: `accessToken ${token}` },
       });
       const updatedUsers = users.filter((user) => user._id !== id);
       setUsers(updatedUsers);

@@ -9,18 +9,22 @@ import "./Table.css";
 import { DataTable } from "primereact/datatable";
 import { Column } from "primereact/column";
 import { Button } from "primereact/button";
-import axios from "axios";
-
+import { InputText } from "primereact/inputtext";
+import { IconField } from "primereact/iconfield";
+import { InputIcon } from "primereact/inputicon";
 const Categories = () => {
   const [category, setCategory] = useState([]);
+  const [search, setSearch] = useState("");
+  const [filteredCategory, setFilteredCategory] = useState([]);
+
   const cookie = Cookie();
-  const token = cookie.get("Bearer");
+  const token = cookie.get("accessToken");
   const navigate = useNavigate();
 
   const fetchCategories = async () => {
     try {
       const res = await Axios.get(`/${GET_GATEGORY}`, {
-        headers: { Authorization: `Bearer ${token}` },
+        headers: { Authorization: `accessToken ${token}` },
       });
 
       const data = Array.isArray(res.data.data) ? res.data.data : [];
@@ -47,8 +51,8 @@ const Categories = () => {
     if (!confirmDelete) return;
 
     try {
-      await axios.delete(`${BASE_URL}/${DELETE_CATEGORY}/${id}`, {
-        headers: { Authorization: `Bearer ${token}` },
+      await Axios.delete(`${BASE_URL}/${DELETE_CATEGORY}/${id}`, {
+        headers: { Authorization: `accessToken ${token}` },
       });
 
       setCategory((prev) => prev.filter((cat) => cat._id !== id));
@@ -58,6 +62,23 @@ const Categories = () => {
       console.error("Delete Error:", error);
     }
   };
+
+  // handel Search
+  useEffect(() => {
+    const result = category.filter(
+      (cat) =>
+        cat.name?.toLowerCase().includes(search.toLowerCase()) ||
+        cat.createdBy.name
+          ?.toString()
+          .toLowerCase()
+          .includes(search.toLowerCase()) ||
+        cat.createdBy.email
+          ?.toString()
+          .toLowerCase()
+          .includes(search.toLowerCase())
+    );
+    setFilteredCategory(result);
+  }, [category, search]);
 
   const imageBodyTemplate = (rowData) => {
     let imageUrl = rowData.image;
@@ -83,9 +104,25 @@ const Categories = () => {
   return (
     <>
       <ToastContainer position="top-right" autoClose={3000} theme="colored" />
+      <div
+        style={{
+          display: "flex",
+          justifyContent: "flex-end",
+          marginBottom: "1px",
+        }}
+      >
+        <IconField iconPosition="left">
+          <InputIcon className="pi pi-search" />
+          <InputText
+            placeholder="Search"
+            value={search}
+            onChange={(e) => setSearch(e.target.value)}
+          />
+        </IconField>
+      </div>
 
       <DataTable
-        value={category}
+        value={filteredCategory}
         paginator
         rows={5}
         responsiveLayout="scroll"

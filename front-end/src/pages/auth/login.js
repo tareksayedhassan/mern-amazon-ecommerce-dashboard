@@ -8,6 +8,8 @@ import googleIcon from "../../assets/download.png";
 import "../../css/google.css";
 import { jwtDecode } from "jwt-decode";
 import "./button.css";
+import { Axios } from "../../Api/Axios";
+
 const Login = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -20,14 +22,19 @@ const Login = () => {
     e.preventDefault();
     setloading(true);
     try {
-      const res = await axios.post(`${BASE_URL}/${LOGIN}`, {
+      const res = await Axios.post(`${BASE_URL}/${LOGIN}`, {
         email,
         password,
       });
-      const token = res.data.data.token;
-      const decoded = jwtDecode(token);
 
-      cookie.set("Bearer", token);
+      const accessToken = res.data.data?.token;
+      const refreshToken = res.data.data?.refreshToken;
+      cookie.set("accessToken", accessToken);
+      cookie.set("refreshToken", refreshToken);
+      const decoded = jwtDecode(accessToken);
+
+      cookie.set("accessToken", accessToken);
+
       setloading(false);
       setMessage("User logged in successfully");
       if (decoded.role == "admin" || decoded.role == "product manager") {

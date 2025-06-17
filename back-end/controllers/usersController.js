@@ -6,18 +6,25 @@ const { validationResult } = require("express-validator");
 const bcrypt = require("bcrypt");
 const generateJWT = require("../utils/generateJWT");
 
-// Get all users with pagination
+// Get all users with pagination & search
 const getAllUsers = asyncWrapper(async (req, res, next) => {
-  const { page = 1, limit = 10 } = req.query;
+  const { page = 1, limit = 10, search = "" } = req.query;
   const skip = (parseInt(page) - 1) * parseInt(limit);
 
+  const searchQuery = search ? { name: { $regex: search, $options: "i" } } : {};
+
+  const total = await usersModel.countDocuments(searchQuery);
+
   const users = await usersModel
-    .find({}, { __v: 0 })
+    .find(searchQuery, { __v: 0 })
     .limit(parseInt(limit))
     .skip(skip);
 
   res.status(200).json({
     status: SUCCESS,
+    page: Number(page),
+    limit: Number(limit),
+    total,
     results: users.length,
     data: { users },
   });
