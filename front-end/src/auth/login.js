@@ -1,14 +1,14 @@
 import axios from "axios";
 import { useMemo, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { BASE_URL, LOGIN } from "../../Api/APi";
-import Loading from "../../Loading/Loading";
+import { BASE_URL, LOGIN } from "../Api/APi";
+import Loading from "../Loading/Loading";
 import Cookie from "cookie-universal";
-import googleIcon from "../../assets/download.png";
-import "../../css/google.css";
+import googleIcon from "../assets/download.png";
+import "../css/google.css";
 import { jwtDecode } from "jwt-decode";
 import "./button.css";
-import { Axios } from "../../Api/Axios";
+import { Axios } from "../Api/Axios";
 
 const Login = () => {
   const [email, setEmail] = useState("");

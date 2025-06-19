@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import Cookie from "cookie-universal";
 import { useNavigate } from "react-router-dom";
-import Loading from "../../Loading/Loading";
+import Loading from "../Loading/Loading";
 import { Button } from "react-bootstrap";
 
 const Logout = () => {

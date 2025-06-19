@@ -1,13 +1,13 @@
 import React, { useState } from "react";
-import { BASE_URL, REGISTER } from "../../Api/APi";
+import { BASE_URL, REGISTER } from "../Api/APi";
 import "./form.css";
 import "./button.css";
 import { useNavigate } from "react-router-dom";
-import Loading from "../../Loading/Loading";
+import Loading from "../Loading/Loading";
 import Cookie from "cookie-universal";
-import googleIcon from "../../assets/download.png";
-import "../../css/google.css";
-import { Axios } from "../../Api/Axios";
+import googleIcon from "../assets/download.png";
+import "../css/google.css";
+import { Axios } from "../Api/Axios";
 const Register = () => {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");

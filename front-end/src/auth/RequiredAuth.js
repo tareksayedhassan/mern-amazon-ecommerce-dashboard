@@ -2,7 +2,7 @@ import React, { useEffect, useMemo, useState } from "react";
 import Cookie from "cookie-universal";
 import { jwtDecode } from "jwt-decode";
 import { Navigate, Outlet } from "react-router-dom";
-import ErrorPage from "../Error/Error";
+import ErrorPage from "../Router/Error/Error";
 
 const RequiredAuth = () => {
   const cookie = Cookie();

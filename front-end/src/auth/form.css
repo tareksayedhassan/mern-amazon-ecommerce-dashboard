@@ -13,7 +13,7 @@ body {
       white 50%,
       transparent 50%
     ),
-    url("../../assets/1.jpg");
+    url("../assets/1.jpg");
   background-position: center;
   background-size: cover;
   background-repeat: no-repeat;

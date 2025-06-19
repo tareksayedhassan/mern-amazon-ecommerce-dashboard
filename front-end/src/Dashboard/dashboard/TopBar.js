@@ -9,7 +9,7 @@ import { GET_SINGLE_USER } from "../../Api/APi";
 import { Axios } from "../../Api/Axios";
 import Dropdown from "react-bootstrap/Dropdown";
 import DropdownButton from "react-bootstrap/DropdownButton";
-import Logout from "../../pages/auth/Logout";
+import Logout from "../../auth/Logout";
 
 const Topbar = () => {
   const [name, setName] = useState("User");
