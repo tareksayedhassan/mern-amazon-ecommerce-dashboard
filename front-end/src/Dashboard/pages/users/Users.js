@@ -15,7 +15,7 @@ import { Axios } from "../../../Api/Axios";
 
 const Users = () => {
   const cookie = Cookie();
-  const token = cookie.get("accessToken");
+  const token = cookie.get("Bearer");
 
   const [users, setUsers] = useState([]);
   const [filteredUsers, setFilteredUsers] = useState([]);
@@ -85,7 +85,7 @@ const Users = () => {
       setLoading(true);
       toast.info("Deleting user...");
       await Axios.delete(`/${DELETE_USER}/${id}`, {
-        headers: { Authorization: `accessToken ${token}` },
+        headers: { Authorization: `Bearer ${token}` },
       });
       const updatedUsers = users.filter((user) => user._id !== id);
       setUsers(updatedUsers);

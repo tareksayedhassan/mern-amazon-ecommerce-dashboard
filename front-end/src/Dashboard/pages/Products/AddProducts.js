@@ -26,7 +26,7 @@ const AddProducts = () => {
   const [loading, setLoading] = useState(false);
 
   const cookie = Cookie();
-  const token = cookie.get("accessToken");
+  const token = cookie.get("Bearer");
   const decoded = useMemo(() => jwtDecode(token), [token]);
   const { windowSize } = useContext(WindowSize);
   const navigate = useNavigate();
@@ -68,7 +68,7 @@ const AddProducts = () => {
 
       const res = await Axios.post(`${BASE_URL}/${ADD_PRODUCT}`, formData, {
         headers: {
-          Authorization: `accessToken ${token}`,
+          Authorization: `Bearer ${token}`,
           "Content-Type": "multipart/form-data",
         },
         withCredentials: true,

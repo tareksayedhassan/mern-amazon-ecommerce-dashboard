@@ -38,9 +38,9 @@ const Register = () => {
         confirmPassword,
       });
 
-      const accessToken = res.data.data?.token;
+      const token = res.data.data?.token;
       const refreshToken = res.data.data?.refreshToken;
-      cookie.set("accessToken", accessToken);
+      cookie.set("Bearer", token);
       cookie.set("refreshToken", refreshToken);
 
       setloading(false);

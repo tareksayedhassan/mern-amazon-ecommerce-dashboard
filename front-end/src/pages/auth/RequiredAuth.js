@@ -6,7 +6,7 @@ import ErrorPage from "../Error/Error";
 
 const RequiredAuth = () => {
   const cookie = Cookie();
-  const token = cookie.get("accessToken");
+  const token = cookie.get("Bearer");
   const [userRole, setUserRole] = useState(null);
   const [loading, setLoading] = useState(true);
 

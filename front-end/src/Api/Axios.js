@@ -10,9 +10,9 @@ export const Axios = axios.create({
 });
 Axios.interceptors.request.use(
   (config) => {
-    const token = cookie.get("accessToken");
+    const token = cookie.get("Bearer");
     if (token) {
-      config.headers.Authorization = `accessToken ${token}`;
+      config.headers.Authorization = `Bearer ${token}`;
     }
     return config;
   },
@@ -35,17 +35,16 @@ Axios.interceptors.response.use(
           refreshToken,
         });
 
-        const newAccessToken = res.data?.accessToken; // ✅
-        if (newAccessToken) {
-          cookie.set("accessToken", newAccessToken); // ✅
+        const newBearer = res.data?.Bearer;
+        if (newBearer) {
+          cookie.set("Bearer", newBearer);
 
-          originalRequest.headers.Authorization = `accessToken ${newAccessToken}`; // ✅
-
+          originalRequest.headers.Authorization = `Bearer ${newBearer}`;
           return Axios(originalRequest);
         }
       } catch (refreshError) {
         console.error("Token refresh failed:", refreshError);
-        cookie.remove("accessToken"); // ✅
+        cookie.remove("Bearer");
         cookie.remove("refreshToken");
         window.location.href = "/login";
       }

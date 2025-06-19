@@ -9,3 +9,9 @@ body,
 html {
   overflow-x: hidden;
 }
+body {
+  visibility: hidden;
+}
+body.loaded {
+  visibility: visible;
+}

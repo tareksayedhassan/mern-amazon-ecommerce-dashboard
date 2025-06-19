@@ -10,8 +10,10 @@ import "bootstrap/dist/css/bootstrap.min.css";
 import "bootstrap/dist/js/bootstrap.bundle.min.js";
 import { PrimeReactProvider } from "primereact/api";
 
-import "primereact/resources/themes/lara-light-cyan/theme.css";
-
+import "primereact/resources/themes/lara-light-indigo/theme.css";
+import "primereact/resources/primereact.min.css";
+import "primeicons/primeicons.css";
+import "primeflex/primeflex.css";
 const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(
   <React.StrictMode>
@@ -24,3 +26,6 @@ root.render(
     </PrimeReactProvider>
   </React.StrictMode>
 );
+window.addEventListener("load", () => {
+  document.body.classList.add("loaded");
+});

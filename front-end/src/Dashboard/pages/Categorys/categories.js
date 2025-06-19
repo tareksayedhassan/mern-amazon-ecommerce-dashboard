@@ -18,13 +18,13 @@ const Categories = () => {
   const [filteredCategory, setFilteredCategory] = useState([]);
 
   const cookie = Cookie();
-  const token = cookie.get("accessToken");
+  const token = cookie.get("Bearer");
   const navigate = useNavigate();
 
   const fetchCategories = async () => {
     try {
       const res = await Axios.get(`/${GET_GATEGORY}`, {
-        headers: { Authorization: `accessToken ${token}` },
+        headers: { Authorization: `Bearer ${token}` },
       });
 
       const data = Array.isArray(res.data.data) ? res.data.data : [];
@@ -52,7 +52,7 @@ const Categories = () => {
 
     try {
       await Axios.delete(`${BASE_URL}/${DELETE_CATEGORY}/${id}`, {
-        headers: { Authorization: `accessToken ${token}` },
+        headers: { Authorization: `Bearer ${token}` },
       });
 
       setCategory((prev) => prev.filter((cat) => cat._id !== id));

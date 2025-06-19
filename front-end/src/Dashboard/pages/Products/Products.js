@@ -25,13 +25,13 @@ const Products = () => {
   const [search, setSearch] = useState("");
 
   const cookie = Cookie();
-  const token = cookie.get("accessToken");
+  const token = cookie.get("Bearer");
   const navigate = useNavigate();
 
   const fetchProducts = async () => {
     try {
       const res = await Axios.get(`/${GET_PRODUCT}`, {
-        headers: { Authorization: `accessToken ${token}` },
+        headers: { Authorization: `Bearer ${token}` },
       });
       setProducts(res.data.data);
       setFilteredProducts(res.data.data);

@@ -38,7 +38,7 @@ const adminOnly = [verifyToken, allowedTo("admin", "product manager")];
 
 router.post("/", adminOnly, upload.array("image", 10), addProduct);
 
-router.get("/", adminOnly, getAllProducts);
+router.get("/", getAllProducts);
 
 router.get("/:id", adminOnly, getSingleProduct);
 router.delete("/:id", adminOnly, deleteProducts);

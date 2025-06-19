@@ -27,13 +27,13 @@ const Login = () => {
         password,
       });
 
-      const accessToken = res.data.data?.token;
+      const Bearer = res.data.data?.token;
       const refreshToken = res.data.data?.refreshToken;
-      cookie.set("accessToken", accessToken);
+      cookie.set("Bearer", Bearer);
       cookie.set("refreshToken", refreshToken);
-      const decoded = jwtDecode(accessToken);
+      const decoded = jwtDecode(Bearer);
 
-      cookie.set("accessToken", accessToken);
+      cookie.set("Bearer", Bearer);
 
       setloading(false);
       setMessage("User logged in successfully");

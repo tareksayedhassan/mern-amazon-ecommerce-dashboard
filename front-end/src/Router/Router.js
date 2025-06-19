@@ -10,7 +10,6 @@ import RequiredAuth from "../pages/auth/RequiredAuth";
 import EditUser from "../Dashboard/pages/users/EditUser";
 import AddUser from "../Dashboard/pages/users/AddUser";
 import RoleBasedRoute from "../pages/auth/RoleBasedRoute";
-import RequireBack from "../pages/auth/RequireBack";
 import Categories from "../Dashboard/pages/Categorys/categories";
 import AddCategory from "../Dashboard/pages/Categorys/AddCategory";
 import EditCategory from "../Dashboard/pages/Categorys/EditCategory";
@@ -26,17 +25,12 @@ const Router = createBrowserRouter([
     children: [
       { index: true, element: <Home /> },
       {
-        element: <RequireBack />,
-        children: [
-          {
-            path: "login",
-            element: <Login />,
-          },
-          {
-            path: "register",
-            element: <Register />,
-          },
-        ],
+        path: "login",
+        element: <Login />,
+      },
+      {
+        path: "register",
+        element: <Register />,
       },
 
       {
