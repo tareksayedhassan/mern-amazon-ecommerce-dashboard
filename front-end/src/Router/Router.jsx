@@ -1,25 +1,44 @@
-import React from "react";
-
+import React, { lazy, Suspense } from "react";
 import { createBrowserRouter } from "react-router-dom";
 import App from "../App";
-import Register from "../auth/register";
 import ErrorPage from "./Error/Error";
-import Login from "../auth/login";
-import Home from "../Componens/pages/Home";
-import Users from "../Dashboard/pages/users/Users";
-import Dashboard from "../Dashboard/dashboard/Dashboard";
 import RequiredAuth from "../auth/RequiredAuth";
-import EditUser from "../Dashboard/pages/users/EditUser";
-import AddUser from "../Dashboard/pages/users/AddUser";
 import RoleBasedRoute from "../auth/RoleBasedRoute";
-import Categories from "../Dashboard/pages/Categorys/categories";
-import AddCategory from "../Dashboard/pages/Categorys/AddCategory";
-import EditCategory from "../Dashboard/pages/Categorys/EditCategory";
-import Products from "../Dashboard/pages/Products/Products";
-import AddProducts from "../Dashboard/pages/Products/AddProducts";
-import EditProduct from "../Dashboard/pages/Products/EditProduct";
-import Brand from "../Dashboard/pages/Brands/Brand";
-import AddBrand from "../Dashboard/pages/Brands/AddBrand";
+
+// Lazy Loaded Components
+const Register = lazy(() => import("../auth/register"));
+const Login = lazy(() => import("../auth/login"));
+const Home = lazy(() => import("../Componens/pages/Home"));
+const Users = lazy(() => import("../Dashboard/pages/users/Users"));
+const EditUser = lazy(() => import("../Dashboard/pages/users/EditUser"));
+const AddUser = lazy(() => import("../Dashboard/pages/users/AddUser"));
+const Dashboard = lazy(() => import("../Dashboard/dashboard/Dashboard"));
+const Categories = lazy(() =>
+  import("../Dashboard/pages/Categorys/categories")
+);
+const AddCategory = lazy(() =>
+  import("../Dashboard/pages/Categorys/AddCategory")
+);
+const EditCategory = lazy(() =>
+  import("../Dashboard/pages/Categorys/EditCategory")
+);
+const Products = lazy(() => import("../Dashboard/pages/Products/Products"));
+const AddProducts = lazy(() =>
+  import("../Dashboard/pages/Products/AddProducts")
+);
+const EditProduct = lazy(() =>
+  import("../Dashboard/pages/Products/EditProduct")
+);
+const Brand = lazy(() => import("../Dashboard/pages/Brands/Brand"));
+const AddBrand = lazy(() => import("../Dashboard/pages/Brands/AddBrand"));
+const EditBrand = lazy(() => import("../Dashboard/pages/Brands/EditBrand"));
+
+// Suspense wrapper
+const withSuspense = (Component) => (
+  <Suspense fallback={<div>Loading...</div>}>
+    <Component />
+  </Suspense>
+);
 
 const Router = createBrowserRouter([
   {
@@ -27,77 +46,50 @@ const Router = createBrowserRouter([
     element: <App />,
     errorElement: <ErrorPage />,
     children: [
-      { index: true, element: <Home /> },
+      { index: true, element: withSuspense(Home) },
       {
         path: "login",
-        element: <Login />,
+        element: withSuspense(Login),
       },
       {
         path: "register",
-        element: <Register />,
+        element: withSuspense(Register),
       },
-
       {
         element: <RequiredAuth />,
         children: [
           {
             path: "dashboard",
-            element: <Dashboard />,
+            element: withSuspense(Dashboard),
             children: [
               {
                 element: (
                   <RoleBasedRoute allowedRoles={["product manager", "admin"]} />
                 ),
                 children: [
-                  {
-                    path: "categories",
-                    element: <Categories />,
-                  },
-                  {
-                    path: "add-category",
-                    element: <AddCategory />,
-                  },
+                  { path: "categories", element: withSuspense(Categories) },
+                  { path: "add-category", element: withSuspense(AddCategory) },
                   {
                     path: "edit-Category/:id",
-                    element: <EditCategory />,
+                    element: withSuspense(EditCategory),
                   },
-                  {
-                    path: "products",
-                    element: <Products />,
-                  },
-                  {
-                    path: "add/products",
-                    element: <AddProducts />,
-                  },
+                  { path: "products", element: withSuspense(Products) },
+                  { path: "add/products", element: withSuspense(AddProducts) },
                   {
                     path: "edit/products/:id",
-                    element: <EditProduct />,
+                    element: withSuspense(EditProduct),
                   },
-                  {
-                    path: "brand",
-                    element: <Brand />,
-                  },
-                  {
-                    path: "add/brand",
-                    element: <AddBrand />,
-                  },
+                  { path: "brand", element: withSuspense(Brand) },
+                  { path: "add/brand", element: withSuspense(AddBrand) },
+                  { path: "edit/brand/:id", element: withSuspense(EditBrand) },
                 ],
               },
               {
                 element: <RoleBasedRoute allowedRoles={["admin"]} />,
                 children: [
-                  {
-                    path: "users",
-                    element: <Users />,
-                  },
-                  {
-                    path: "users/edit/:id",
-                    element: <EditUser />,
-                  },
-                  {
-                    path: "users/add",
-                    element: <AddUser />,
-                  },
+                  { path: "users", element: withSuspense(Users) },
+                  { path: "users/edit/:id", element: withSuspense(EditUser) },
+                  { path: "users/add", element: withSuspense(AddUser) },
                 ],
               },
             ],

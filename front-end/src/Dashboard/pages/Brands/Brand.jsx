@@ -11,10 +11,12 @@ import { MultiSelect } from "primereact/multiselect";
 import { Tag } from "primereact/tag";
 import { TriStateCheckbox } from "primereact/tristatecheckbox";
 import { Axios } from "../../../Api/Axios";
-import { GET_BRANDS } from "../../../Api/APi";
+import { DELETE_BRAND, GET_BRANDS } from "../../../Api/APi";
 import { toast } from "react-toastify";
 import { Link } from "react-router-dom";
 import { Button } from "primereact/button";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faEdit, faTrash } from "@fortawesome/free-solid-svg-icons";
 
 const Brand = () => {
   const [brands, setBrands] = useState([]);
@@ -22,7 +24,7 @@ const Brand = () => {
     global: { value: null, matchMode: FilterMatchMode.CONTAINS },
     name: { value: null, matchMode: FilterMatchMode.STARTS_WITH },
     "country.name": { value: null, matchMode: FilterMatchMode.STARTS_WITH },
-    representative: { value: null, matchMode: FilterMatchMode.IN },
+    agent: { value: null, matchMode: FilterMatchMode.IN },
     status: { value: null, matchMode: FilterMatchMode.EQUALS },
     verified: { value: null, matchMode: FilterMatchMode.EQUALS },
   });
@@ -83,7 +85,7 @@ const Brand = () => {
         <IconField iconPosition="left" className="w-full sm:w-auto">
           <InputIcon className="pi pi-search" />
           <InputText
-            value={globalFilterValue}
+            value={globalFilterValue || ""}
             onChange={onGlobalFilterChange}
             placeholder="Search..."
             className="w-full sm:w-18rem"
@@ -97,7 +99,7 @@ const Brand = () => {
   };
 
   const imageBodyTemplate = (rowData) => {
-    let imageUrl = rowData.image;
+    let imageUrl = rowData.logo;
 
     if (imageUrl?.includes("uploads/uploads")) {
       imageUrl = imageUrl.replace("uploads/uploads", "uploads");
@@ -106,7 +108,7 @@ const Brand = () => {
     return imageUrl ? (
       <img
         src={imageUrl}
-        alt={rowData.name || "Category Image"}
+        alt={rowData.name || "brand logo"}
         style={{ width: "50px", height: "50px", objectFit: "cover" }}
         onError={(e) => {
           e.target.src = "http://localhost:4000/uploads/category.webp";
@@ -116,6 +118,7 @@ const Brand = () => {
       <span>No Image Found</span>
     );
   };
+
   const statusBodyTemplate = (rowData) => (
     <Tag value={rowData.status} severity={getSeverity(rowData.status)} />
   );
@@ -133,29 +136,19 @@ const Brand = () => {
     ></i>
   );
 
-  const representativeRowFilterTemplate = (options) => {
-    const representatives = brands
-      .filter((b) => b.representative)
-      .map((b) => b.representative);
+  const agentRowFilterTemplate = (options) => {
+    const agents = Array.from(
+      new Set(brands.map((b) => b.agent).filter(Boolean))
+    ).map((name) => ({ name }));
 
     return (
       <MultiSelect
         value={options.value}
-        options={representatives}
-        itemTemplate={(option) => (
-          <div className="flex align-items-center gap-2">
-            <img
-              alt={option.name}
-              src={`https://primefaces.org/cdn/primereact/images/avatar/${
-                option.image || "placeholder.png"
-              }`}
-              width="32"
-            />
-            <span>{option.name}</span>
-          </div>
-        )}
-        onChange={(e) => options.filterApplyCallback(e.value)}
+        options={agents}
         optionLabel="name"
+        optionValue="name"
+        itemTemplate={(option) => <span key={option.name}>{option.name}</span>}
+        onChange={(e) => options.filterApplyCallback(e.value)}
         placeholder="Any"
         className="p-column-filter"
         maxSelectedLabels={1}
@@ -184,22 +177,47 @@ const Brand = () => {
     />
   );
 
+  const handleDelete = async (id) => {
+    if (!window.confirm("Are you sure you want to delete this brand?")) return;
+    try {
+      await Axios.delete(`/${DELETE_BRAND}/${id}`);
+      setBrands((prev) => prev.filter((b) => b._id !== id));
+      toast.success("Brand deleted successfully!");
+    } catch (err) {
+      toast.error("Failed to delete brand");
+    }
+  };
+
+  const actionBodyTemplate = (rowData) => (
+    <div className="flex gap-2 justify-content-center">
+      <Link to={`/dashboard/edit/brand/${rowData._id}`}>
+        <Button
+          icon={<FontAwesomeIcon icon={faEdit} />}
+          className="p-button-secondary p-button-sm"
+          tooltip="Edit"
+        />
+      </Link>
+      <Button
+        icon={<FontAwesomeIcon icon={faTrash} />}
+        className="p-button-danger p-button-sm"
+        onClick={() => handleDelete(rowData._id)}
+        tooltip="Delete"
+      />
+    </div>
+  );
+
   return (
     <div className="card">
       <DataTable
         value={brands}
         paginator
-        rows={10}
-        dataKey="id"
+        rows={5}
+        rowsPerPageOptions={[5, 10, 25, 50]}
+        dataKey="_id"
         filters={filters}
         filterDisplay="row"
         loading={loading}
-        globalFilterFields={[
-          "name",
-          "country.name",
-          "representative.name",
-          "status",
-        ]}
+        globalFilterFields={["name", "country.name", "agent", "status"]}
         header={renderHeader()}
         emptyMessage="No brands found."
       >
@@ -220,18 +238,16 @@ const Brand = () => {
           filterPlaceholder="Search by country"
         />
         <Column
-          field="representative"
+          field="agent"
           header="Agent"
-          filterField="representative"
+          filterField="agent"
           showFilterMenu={false}
           style={{ minWidth: "14rem" }}
-          body={(rowData) =>
-            rowData.representative ? rowData.representative.name : "N/A"
-          }
+          body={(rowData) => rowData.agent || "N/A"}
           filter
-          filterElement={representativeRowFilterTemplate}
+          filterElement={agentRowFilterTemplate}
         />
-        <Column header="logo" body={imageBodyTemplate} />
+        <Column header="Logo" body={imageBodyTemplate} />
         <Column
           field="status"
           header="Status"
@@ -249,6 +265,11 @@ const Brand = () => {
           body={verifiedBodyTemplate}
           filter
           filterElement={verifiedRowFilterTemplate}
+        />
+        <Column
+          header="Actions"
+          body={actionBodyTemplate}
+          style={{ textAlign: "center", minWidth: "8rem" }}
         />
       </DataTable>
     </div>

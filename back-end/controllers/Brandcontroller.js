@@ -11,13 +11,14 @@ const addBrand = asyncWrapper(async (req, res, next) => {
     return next(new AppError("Unauthorized", 401, FAIL));
   }
 
-  const { name, country, status, verified } = req.body;
+  const { name, agent, country, status, verified } = req.body;
 
   const image =
     req.file && req.file.filename ? req.file.filename : "category.webp";
 
   const brand = new BrandModel({
     name,
+    agent,
     logo: image,
     country,
     status,
@@ -78,7 +79,7 @@ const editBrand = asyncWrapper(async (req, res, next) => {
   }
 
   const brandId = req.params.id;
-  const { name, country, status, verified } = req.body;
+  const { name, agent, country, status, verified } = req.body;
 
   const oldBrand = await BrandModel.findById(brandId);
   if (!oldBrand) {
@@ -108,6 +109,7 @@ const editBrand = asyncWrapper(async (req, res, next) => {
     brandId,
     {
       name,
+      agent,
       logo,
       country,
       status,

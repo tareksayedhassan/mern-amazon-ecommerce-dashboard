@@ -18,31 +18,43 @@ import { InputIcon } from "primereact/inputicon";
 
 const Products = () => {
   const [products, setProducts] = useState([]);
-  const [filteredProducts, setFilteredProducts] = useState([]);
+  const [totalRecords, setTotalRecords] = useState(0);
   const [visible, setVisible] = useState(false);
   const [selectedImages, setSelectedImages] = useState([]);
   const [activeIndex, setActiveIndex] = useState(0);
   const [search, setSearch] = useState("");
-
+  const [currentPage, setCurrentPage] = useState(1);
+  const [rowsPerPage, setRowsPerPage] = useState(5);
   const cookie = Cookie();
   const token = cookie.get("Bearer");
   const navigate = useNavigate();
+  const truncateText = (text, maxWords) => {
+    if (!text) return "";
+    const words = text.split(" ");
+    if (words.length <= maxWords) return text;
+    return words.slice(0, maxWords).join(" ") + "...";
+  };
 
-  const fetchProducts = async () => {
+  const fetchProducts = async (page, limit) => {
     try {
-      const res = await Axios.get(`/${GET_PRODUCT}`, {
-        headers: { Authorization: `Bearer ${token}` },
-      });
+      const res = await Axios.get(
+        `/${GET_PRODUCT}?page=${page}&limit=${limit}&search=${search}`,
+        {
+          headers: { Authorization: `Bearer ${token}` },
+        }
+      );
+
       setProducts(res.data.data);
-      setFilteredProducts(res.data.data);
+      setTotalRecords(res.data.total);
+      setCurrentPage(res.data.page);
     } catch (err) {
       toast.error("Error loading products");
     }
   };
 
   useEffect(() => {
-    fetchProducts();
-  }, []);
+    fetchProducts(currentPage, rowsPerPage);
+  }, [currentPage, rowsPerPage, search]);
 
   const openImageGallery = (images) => {
     const fixedImages = images.map((img) =>
@@ -55,43 +67,14 @@ const Products = () => {
     setActiveIndex(0);
   };
 
-  useEffect(() => {
-    const result = products.filter(
-      (pro) =>
-        pro.title?.toLowerCase().includes(search.toLowerCase()) ||
-        pro.category?.name?.toLowerCase().includes(search.toLowerCase()) ||
-        pro.price?.toString().toLowerCase().includes(search.toLowerCase()) ||
-        pro.discount?.toString().toLowerCase().includes(search.toLowerCase()) ||
-        pro.ratings_number
-          ?.toString()
-          .toLowerCase()
-          .includes(search.toLowerCase())
-    );
-    setFilteredProducts(result);
-  }, [products, search]);
-
   const imageBodyTemplate = (product) => {
-    if (
-      !product.image ||
-      !Array.isArray(product.image) ||
-      product.image.length === 0
-    ) {
-      return (
-        <img
-          src="http://localhost:4000/uploads/category.webp"
-          alt="default"
-          style={{ width: "50px", height: "50px", objectFit: "cover" }}
-        />
-      );
-    }
-
-    const firstImage = product.image[0].includes("uploads/uploads")
-      ? product.image[0].replace("uploads/uploads", "uploads")
-      : product.image[0];
+    const img =
+      product.image?.[0]?.replace("uploads/uploads", "uploads") ||
+      "http://localhost:4000/uploads/category.webp";
 
     return (
       <img
-        src={firstImage}
+        src={img}
         alt={product.title}
         style={{
           width: "50px",
@@ -99,7 +82,7 @@ const Products = () => {
           objectFit: "cover",
           cursor: "pointer",
         }}
-        onClick={() => openImageGallery(product.image)}
+        onClick={() => openImageGallery(product.image || [])}
         onError={(e) =>
           (e.target.src = "http://localhost:4000/uploads/category.webp")
         }
@@ -144,12 +127,7 @@ const Products = () => {
     <img
       src={item}
       alt="Product"
-      style={{
-        width: "100%",
-        maxHeight: "400px",
-        objectFit: "contain",
-        display: "block",
-      }}
+      style={{ width: "100%", maxHeight: "400px", objectFit: "contain" }}
     />
   );
 
@@ -157,7 +135,7 @@ const Products = () => {
     <img
       src={item}
       alt="Thumb"
-      style={{ width: 50, height: 50, objectFit: "cover", display: "block" }}
+      style={{ width: 50, height: 50, objectFit: "cover" }}
     />
   );
 
@@ -169,11 +147,10 @@ const Products = () => {
 
     try {
       await Axios.delete(`/${DELETE_PRODUCT}/${id}`);
-      setProducts((prev) => prev.filter((pro) => pro._id !== id));
+      fetchProducts(currentPage, rowsPerPage);
       toast.success("Product deleted successfully");
     } catch (error) {
       toast.error("Failed to delete Product");
-      console.error("Delete Error:", error);
     }
   };
 
@@ -203,9 +180,16 @@ const Products = () => {
       <ToastContainer position="top-right" autoClose={3000} theme="colored" />
 
       <DataTable
-        value={filteredProducts}
+        value={products}
+        lazy
         paginator
-        rows={5}
+        rows={rowsPerPage}
+        totalRecords={totalRecords}
+        first={(currentPage - 1) * rowsPerPage}
+        onPage={(e) => {
+          setCurrentPage(e.page + 1);
+          setRowsPerPage(e.rows);
+        }}
         rowsPerPageOptions={[5, 10, 20]}
         tableStyle={{ minWidth: "60rem" }}
         emptyMessage="No products found."
@@ -215,8 +199,16 @@ const Products = () => {
         <Column field="price" header="Price" body={priceBodyTemplate} />
         <Column field="category.name" header="Category" />
         <Column field="discount" header="Discount" />
-        <Column field="about" header="About" />
-        <Column field="description" header="Description" />
+        <Column
+          field="about"
+          header="About"
+          body={(rowData) => truncateText(rowData.about, 5)}
+        />
+        <Column
+          field="description"
+          header="Description"
+          body={(rowData) => truncateText(rowData.about, 5)}
+        />
         <Column field="ratings_number" header="Ratings" />
         <Column header="Rating" body={ratingBodyTemplate} />
         <Column header="Status" body={statusBodyTemplate} />
@@ -261,7 +253,6 @@ const Products = () => {
           showItemNavigators
           showThumbnails
           circular
-          style={{ maxWidth: "100%" }}
         />
       </Dialog>
     </div>

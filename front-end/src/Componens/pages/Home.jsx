@@ -4,6 +4,7 @@ import HeroSection from "./HeroSection";
 import BestSeal from "./bestseal";
 import Categories from "./Categoryies";
 import Brands from "./Brands";
+import Clothes from "./Clothes";
 const Home = () => {
   return (
     <div>
@@ -12,6 +13,7 @@ const Home = () => {
       <BestSeal />
       <Categories />
       <Brands />
+      <Clothes />
     </div>
   );
 };

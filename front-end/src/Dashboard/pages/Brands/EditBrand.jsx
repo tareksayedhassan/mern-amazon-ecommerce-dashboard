@@ -1,9 +1,9 @@
-import React, { useState, useContext, useMemo } from "react";
+import React, { useState, useEffect, useContext, useMemo } from "react";
 import { Dropdown } from "primereact/dropdown";
 import { InputText } from "primereact/inputtext";
 import { Button } from "primereact/button";
-import { useNavigate } from "react-router-dom";
-import { ADD_BRAND, BASE_URL } from "../../../Api/APi";
+import { useNavigate, useParams } from "react-router-dom";
+import { BASE_URL, EDIT_BRAND, GET_SINGLE_BRAND } from "../../../Api/APi";
 import { Axios } from "../../../Api/Axios";
 import { toast } from "react-toastify";
 import Loading from "../../../Loading/Loading";
@@ -13,10 +13,11 @@ import { jwtDecode } from "jwt-decode";
 import { Image } from "primereact/image";
 import clude from "../../../assets/cloud-upload-a30f385a928e44e199a62210d578375a.jpg";
 
-const AddBrand = () => {
+const EditBrand = () => {
   const [name, setName] = useState("");
   const [country, setCountry] = useState("");
   const [logo, setLogo] = useState(null);
+  const [oldLogo, setOldLogo] = useState(null);
   const [status, setStatus] = useState("");
   const [verified, setVerified] = useState(false);
   const [loading, setLoading] = useState(false);
@@ -25,6 +26,7 @@ const AddBrand = () => {
   const token = cookie.get("Bearer");
   const decoded = useMemo(() => (token ? jwtDecode(token) : null), [token]);
   const navigate = useNavigate();
+  const { id } = useParams();
   const { windowSize } = useContext(WindowSize);
 
   const statusOptions = [
@@ -35,10 +37,31 @@ const AddBrand = () => {
     { label: "renewal", value: "renewal" },
   ];
 
+  useEffect(() => {
+    const getSingleBrand = async () => {
+      try {
+        setLoading(true);
+        const res = await Axios.get(`/${GET_SINGLE_BRAND}/${id}`);
+        const data = res.data.data;
+        setName(data.name || "");
+        setCountry(data.country || "");
+        setStatus(data.status || "");
+        setAgent(data.agent || "");
+        setVerified(data.verified || false);
+        setOldLogo(data.logo || null);
+      } catch (error) {
+        toast.error("Failed to load brand data");
+      } finally {
+        setLoading(false);
+      }
+    };
+    getSingleBrand();
+  }, [id]);
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
-    const toastId = toast.loading("Adding Brand...");
+    const toastId = toast.loading("Updating Brand...");
 
     try {
       const formData = new FormData();
@@ -46,14 +69,13 @@ const AddBrand = () => {
       formData.append("country", country);
       formData.append("status", status);
       formData.append("agent", agent);
-
       formData.append("verified", verified ? "true" : "false");
       formData.append("createdBy", decoded?.id || "");
       if (logo) {
         formData.append("logo", logo);
       }
 
-      const res = await Axios.post(`${BASE_URL}/${ADD_BRAND}`, formData, {
+      const res = await Axios.put(`${BASE_URL}/${EDIT_BRAND}/${id}`, formData, {
         headers: {
           Authorization: `Bearer ${token}`,
           "Content-Type": "multipart/form-data",
@@ -63,7 +85,7 @@ const AddBrand = () => {
 
       if (res.data.status === "SUCCESS") {
         toast.update(toastId, {
-          render: "Brand added successfully!",
+          render: "Brand updated successfully!",
           type: "success",
           isLoading: false,
           autoClose: 3000,
@@ -71,7 +93,7 @@ const AddBrand = () => {
         navigate("/dashboard/brand");
       } else {
         toast.update(toastId, {
-          render: "Failed to add brand!",
+          render: "Failed to update brand!",
           type: "error",
           isLoading: false,
           autoClose: 3000,
@@ -85,7 +107,7 @@ const AddBrand = () => {
         autoClose: 3000,
       });
       console.error(
-        "Error adding brand:",
+        "Error updating brand:",
         error?.response?.data || error.message
       );
     } finally {
@@ -100,7 +122,7 @@ const AddBrand = () => {
         className="surface-0 p-4 border-round m-auto"
         style={{ maxWidth: "700px" }}
       >
-        <h3 className="text-center mb-5 text-2xl font-bold">Add Brand</h3>
+        <h3 className="text-center mb-5 text-2xl font-bold">Edit Brand</h3>
 
         <form onSubmit={handleSubmit} className="flex flex-column gap-4">
           <div className="flex align-items-center gap-2">
@@ -116,7 +138,7 @@ const AddBrand = () => {
           <div className="flex flex-column gap-2">
             <label>Brand Name</label>
             <InputText
-              value={name || ""}
+              value={name}
               onChange={(e) => setName(e.target.value)}
               placeholder="Brand name..."
               required
@@ -126,16 +148,17 @@ const AddBrand = () => {
           <div className="flex flex-column gap-2">
             <label>Country</label>
             <InputText
-              value={country || ""}
+              value={country}
               onChange={(e) => setCountry(e.target.value)}
               placeholder="Country..."
               required
             />
           </div>
+
           <div className="flex flex-column gap-2">
             <label>Agent</label>
             <InputText
-              value={agent || ""}
+              value={agent}
               onChange={(e) => setAgent(e.target.value)}
               placeholder="Agent..."
               required
@@ -145,7 +168,7 @@ const AddBrand = () => {
           <div className="flex flex-column gap-2">
             <label>Status</label>
             <Dropdown
-              value={status || ""}
+              value={status}
               options={statusOptions}
               onChange={(e) => setStatus(e.value)}
               placeholder="Select Status"
@@ -154,6 +177,7 @@ const AddBrand = () => {
             />
           </div>
 
+          {/* Upload Logo */}
           <div className="flex flex-column align-items-center">
             <input
               type="file"
@@ -194,14 +218,20 @@ const AddBrand = () => {
           </div>
 
           {/* Preview */}
-          {logo && (
+          {(logo || oldLogo) && (
             <div className="flex justify-content-center py-2">
               <div
                 className="relative border-1 surface-border border-round overflow-hidden"
                 style={{ width: "150px", height: "150px" }}
               >
                 <Image
-                  src={URL.createObjectURL(logo)}
+                  src={
+                    logo
+                      ? URL.createObjectURL(logo)
+                      : oldLogo?.includes("uploads/uploads")
+                      ? oldLogo.replace("uploads/uploads", "uploads")
+                      : oldLogo
+                  }
                   alt="preview-logo"
                   preview
                   imageClassName="w-full h-full border-round"
@@ -239,7 +269,10 @@ const AddBrand = () => {
                   severity="danger"
                   className="absolute top-0 right-0 m-1 z-3"
                   type="button"
-                  onClick={() => setLogo(null)}
+                  onClick={() => {
+                    setLogo(null);
+                    setOldLogo(null);
+                  }}
                   style={{
                     backgroundColor: "rgba(255, 255, 255, 0.7)",
                     borderRadius: "50%",
@@ -259,7 +292,7 @@ const AddBrand = () => {
           )}
 
           <div className="flex justify-content-center mt-4">
-            <Button type="submit" label="Add Brand" icon="pi pi-plus" />
+            <Button type="submit" label="Update Brand" icon="pi pi-check" />
           </div>
         </form>
       </div>
@@ -267,4 +300,4 @@ const AddBrand = () => {
   );
 };
 
-export default AddBrand;
+export default EditBrand;

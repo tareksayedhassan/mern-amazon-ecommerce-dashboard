@@ -1,64 +1,87 @@
 import React, { useEffect, useState } from "react";
 import { Axios } from "../../Api/Axios";
-import { GET_GATEGORY } from "../../Api/APi";
+import { GET_BRANDS } from "../../Api/APi";
 import { Carousel } from "primereact/carousel";
 import { toast } from "react-toastify";
+import { useNavigate } from "react-router-dom";
+import { Button } from "primereact/button";
 
 const Brands = () => {
-  const [categories, setCategories] = useState([]);
-
+  const [Brands, setBrands] = useState([]);
+  const navigate = useNavigate();
   useEffect(() => {
-    const fetchCategories = async () => {
+    const fetchBrand = async () => {
       try {
-        const res = await Axios.get(`/${GET_GATEGORY}`);
-        setCategories(res.data.data);
+        const res = await Axios.get(`/${GET_BRANDS}`);
+        setBrands(res.data.data);
       } catch (err) {
         console.error(err);
-        toast.error("Failed to load categories");
+        toast.error("Failed to load Brands");
       }
     };
 
-    fetchCategories();
+    fetchBrand();
   }, []);
-
-  const categoryTemplate = (cat) => {
+  const BrandsTemplate = (bra) => {
     return (
-      <div className="flex flex-column align-items-center p-3">
+      <div
+        className=" border-round surface-card flex align-items-center justify-content-center"
+        style={{
+          width: "330px",
+          height: "200px",
+          borderRadius: "12px",
+          overflow: "hidden",
+          border: "1px solid #eee",
+          margin: "auto",
+          backgroundColor: "#fff",
+        }}
+      >
         <img
-          src={cat.image}
-          alt={cat.name}
+          src={bra.logo}
+          alt="brand"
           style={{
-            width: "150px",
-            height: "150px",
-            objectFit: "cover",
-            borderRadius: "50%",
+            width: "100%",
+            height: "100%",
+            objectFit: "contain",
+            padding: "10px",
+          }}
+          onError={(e) => {
+            e.target.src = "http://localhost:4000/uploads/category.webp";
           }}
         />
-        <p className="mt-2 text-lg font-medium">{cat.name}</p>
       </div>
     );
   };
 
   return (
     <div className="p-5 surface-100 text-center">
-      <h2
-        className="text-2xl font-bold mb-4"
-        style={{ color: "rgba(0,0,0,0.3)" }}
-      >
-        Shop by{" "}
-        <span
-          style={{
-            color: "var(--primary-color)",
-            borderBottom: "2px solid var(--primary-color)",
-          }}
+      <div className="flex justify-content-between">
+        <h2
+          className="text-2xl font-bold mb-4"
+          style={{ color: "rgba(0,0,0,0.3)" }}
         >
-          Brand
-        </span>
-      </h2>
+          Shop By
+          <span
+            style={{
+              color: "var(--primary-color)",
+              borderBottom: "2px solid var(--primary-color)",
+            }}
+          >
+            Brand{" "}
+          </span>
+        </h2>{" "}
+        <div className="mt-4 text-left ">
+          <Button
+            label="View all >"
+            className="p-button-text text-primary font-semibold"
+            onClick={() => navigate("/brands")}
+          />
+        </div>
+      </div>
 
       <Carousel
-        value={categories}
-        itemTemplate={categoryTemplate}
+        value={Brands}
+        itemTemplate={BrandsTemplate}
         autoplayInterval={3000}
         circular
         showIndicators

@@ -10,7 +10,7 @@ const brandModel = new mongoose.Schema(
       enum: ["unqualified", "qualified", "new", "negotiation", "renewal"],
     },
     verified: { type: Boolean },
-
+    agent: { type: String, required: true },
     createdBy: { type: mongoose.Schema.Types.ObjectId, ref: "User" },
   },
   { timestamps: true }

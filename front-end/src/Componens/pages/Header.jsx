@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { use, useEffect, useState } from "react";
 import { Sidebar } from "primereact/sidebar";
 import { Button } from "primereact/button";
 import { Badge } from "primereact/badge";
@@ -7,7 +7,7 @@ import { IconField } from "primereact/iconfield";
 import { InputIcon } from "primereact/inputicon";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faUser, faCartShopping } from "@fortawesome/free-solid-svg-icons";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { Axios } from "../../Api/Axios";
 import { GET_GATEGORY } from "../../Api/APi";
 import { toast } from "react-toastify";
@@ -29,7 +29,7 @@ const Header = () => {
     };
     getCategories();
   }, []);
-
+  const navigate = useNavigate();
   const showCat = (
     <div className="flex justify-content-center py-3">
       <div className="flex flex-wrap gap-3 justify-content-center">
@@ -66,8 +66,9 @@ const Header = () => {
           <Button icon="pi pi-bars" onClick={() => setVisible(true)} />
           <Badge
             value="MegaMart"
-            className="text-xl font-bold bg-transparent border-none"
+            className="text-xl font-bold bg-transparent border-none cursor-pointer"
             style={{ color: "var(--primary-color)" }}
+            onClick={() => navigate("/")}
           />
         </div>
         <div className="flex align-items-center w-6">

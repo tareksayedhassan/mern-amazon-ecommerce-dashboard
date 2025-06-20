@@ -76,13 +76,21 @@ const getSingleProduct = asyncWrapper(async (req, res, next) => {
     data: productWithImage,
   });
 });
-
 const getAllProducts = asyncWrapper(async (req, res, next) => {
   const { page = 1, limit = 10, search = "" } = req.query;
   const skip = (parseInt(page) - 1) * parseInt(limit);
   const baseUrl = `${req.protocol}://${req.get("host")}/uploads/`;
 
-  const searchQuery = search ? { name: { $regex: search, $options: "i" } } : {};
+  // ✅ فلترة على أكتر من حقل
+  const searchQuery = search
+    ? {
+        $or: [
+          { title: { $regex: search, $options: "i" } },
+          { description: { $regex: search, $options: "i" } },
+          { about: { $regex: search, $options: "i" } },
+        ],
+      }
+    : {};
 
   const total = await ProductModel.countDocuments(searchQuery);
 
@@ -104,6 +112,8 @@ const getAllProducts = asyncWrapper(async (req, res, next) => {
     page: Number(page),
     limit: Number(limit),
     total,
+    totalPages: Math.ceil(total / limit),
+    count: productsWithImage.length,
     data: productsWithImage,
   });
 });

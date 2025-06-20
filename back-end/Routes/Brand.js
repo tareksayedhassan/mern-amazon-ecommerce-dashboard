@@ -37,10 +37,10 @@ const upload = multer({ storage: diskStorage, fileFilter });
 
 const adminOnly = [verifyToken, allowedTo("admin", "product manager")];
 
-router.post("/", adminOnly, upload.single("image"), addBrand);
+router.post("/", adminOnly, upload.single("logo"), addBrand);
 router.get("/", getAllBrands);
 router.get("/:id", adminOnly, getSingleBrand);
 router.delete("/:id", adminOnly, deleteBrand);
-router.patch("/:id", adminOnly, upload.single("image"), editBrand);
+router.patch("/:id", adminOnly, upload.single("logo"), editBrand);
 
 module.exports = router;
