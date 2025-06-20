@@ -32,10 +32,6 @@ const SocialUsers = new mongoose.Schema(
       sparse: true,
     },
 
-    token: {
-      type: String,
-    },
-
     role: {
       type: String,
       enum: ["admin", "user", "product manager"],

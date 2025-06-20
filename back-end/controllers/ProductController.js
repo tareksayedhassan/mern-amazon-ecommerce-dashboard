@@ -76,6 +76,7 @@ const getSingleProduct = asyncWrapper(async (req, res, next) => {
     data: productWithImage,
   });
 });
+
 const getAllProducts = asyncWrapper(async (req, res, next) => {
   const { page = 1, limit = 10, search = "" } = req.query;
   const skip = (parseInt(page) - 1) * parseInt(limit);

@@ -4,7 +4,6 @@ const AppError = require("../utils/appError");
 const { SUCCESS, FAIL } = require("../utils/httpStatusText");
 const { validationResult } = require("express-validator");
 const bcrypt = require("bcrypt");
-const generateJWT = require("../utils/generateJWT");
 
 // Get all users with pagination & search
 const getAllUsers = asyncWrapper(async (req, res, next) => {
@@ -54,20 +53,13 @@ const addUser = asyncWrapper(async (req, res, next) => {
 
   const hashedPassword = await bcrypt.hash(password, 10);
 
-  const newUser = usersModel({
+  const newUser = new usersModel({
     name,
     email,
     password: hashedPassword,
     role,
   });
 
-  const token = await generateJWT({
-    email: newUser.email,
-    id: newUser._id,
-    role: newUser.role,
-  });
-
-  newUser.token = token;
   await newUser.save();
 
   res.status(201).json({

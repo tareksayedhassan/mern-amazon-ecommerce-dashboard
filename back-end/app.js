@@ -13,7 +13,7 @@ const port = process.env.PORT || 5000;
 
 app.use(
   cors({
-    origin: "http://localhost:3000",
+    origin: ["http://localhost:3000", "http://localhost:5173"],
     methods: ["GET", "POST", "PUT", "PATCH", "DELETE"],
     credentials: true,
   })
@@ -48,13 +48,14 @@ const users = require("./Routes/users");
 const auth = require("./Routes/auth");
 const Category = require("./Routes/Category");
 const products = require("./Routes/Products");
+const Brand = require("./Routes/Brand");
 const { Error } = require("./utils/httpStatusText");
 
 app.use("/api/auth", auth);
 app.use("/api/user", users);
 app.use("/api/category", Category);
 app.use("/api/products", products);
-
+app.use("/api/brand", Brand);
 app.listen(port, () => {
   console.log(`Server is running on port ${port}`);
 });
