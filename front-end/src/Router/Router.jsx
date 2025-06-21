@@ -8,10 +8,15 @@ import RoleBasedRoute from "../auth/RoleBasedRoute";
 // Lazy Loaded Components
 const Register = lazy(() => import("../auth/register"));
 const Login = lazy(() => import("../auth/login"));
-const Home = lazy(() => import("../Componens/pages/Home"));
+const Home = lazy(() => import("../Componens/pages/website/Home"));
+const showCategories = lazy(() =>
+  import("../Componens/pages/Categories/ShowCategories")
+);
+
 const Users = lazy(() => import("../Dashboard/pages/users/Users"));
 const EditUser = lazy(() => import("../Dashboard/pages/users/EditUser"));
 const AddUser = lazy(() => import("../Dashboard/pages/users/AddUser"));
+// dashboard
 const Dashboard = lazy(() => import("../Dashboard/dashboard/Dashboard"));
 const Categories = lazy(() =>
   import("../Dashboard/pages/Categorys/categories")
@@ -56,6 +61,10 @@ const Router = createBrowserRouter([
         element: withSuspense(Register),
       },
       {
+        path: "show-categories",
+        element: withSuspense(showCategories),
+      },
+      {
         element: <RequiredAuth />,
         children: [
           {
@@ -84,6 +93,7 @@ const Router = createBrowserRouter([
                   { path: "edit/brand/:id", element: withSuspense(EditBrand) },
                 ],
               },
+
               {
                 element: <RoleBasedRoute allowedRoles={["admin"]} />,
                 children: [

@@ -3,8 +3,8 @@ import { faPhone } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import React from "react";
 import { useNavigate } from "react-router-dom";
-import AppStore from "../../assets/app-store-6647240_1280.png";
-import GooglePlay from "../../assets/en_badge_web_generic.png";
+import AppStore from "../../../assets/app-store-6647240_1280.png";
+import GooglePlay from "../../../assets/en_badge_web_generic.png";
 import { Badge } from "primereact/badge";
 
 const Footer = () => {

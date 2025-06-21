@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
-import { Axios } from "../../Api/Axios";
-import { GET_BRANDS } from "../../Api/APi";
+import { Axios } from "../../../Api/Axios";
+import { GET_BRANDS } from "../../../Api/APi";
 import { Carousel } from "primereact/carousel";
 import { toast } from "react-toastify";
 import { useNavigate } from "react-router-dom";

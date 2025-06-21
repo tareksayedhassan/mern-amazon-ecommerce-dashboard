@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
-import { Axios } from "../../Api/Axios";
-import { GET_PRODUCT } from "../../Api/APi";
+import { Axios } from "../../../Api/Axios";
+import { GET_PRODUCT } from "../../../Api/APi";
 import { toast } from "react-toastify";
 import { Card } from "primereact/card";
 import { DataView } from "primereact/dataview";

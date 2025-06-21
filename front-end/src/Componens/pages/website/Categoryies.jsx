@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
-import { Axios } from "../../Api/Axios";
-import { GET_GATEGORY } from "../../Api/APi";
+import { Axios } from "../../../Api/Axios";
+import { GET_GATEGORY } from "../../../Api/APi";
 import { Avatar } from "primereact/avatar";
 import { toast } from "react-toastify";
 import { Tooltip } from "primereact/tooltip";
@@ -44,7 +44,7 @@ const Categories = () => {
           <Button
             label="View all >"
             className="p-button-text text-primary font-semibold"
-            onClick={() => navigate("/categories")}
+            onClick={() => navigate("/show-categories")}
           />
         </div>
       </div>

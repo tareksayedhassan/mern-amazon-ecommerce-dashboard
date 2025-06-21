@@ -8,8 +8,8 @@ import { InputIcon } from "primereact/inputicon";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faUser, faCartShopping } from "@fortawesome/free-solid-svg-icons";
 import { Link, useNavigate } from "react-router-dom";
-import { Axios } from "../../Api/Axios";
-import { GET_GATEGORY } from "../../Api/APi";
+import { Axios } from "../../../Api/Axios";
+import { GET_GATEGORY } from "../../../Api/APi";
 import { toast } from "react-toastify";
 
 const Header = () => {

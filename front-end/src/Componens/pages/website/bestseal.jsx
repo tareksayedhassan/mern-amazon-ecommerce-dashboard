@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
-import { Axios } from "../../Api/Axios";
-import { GET_PRODUCT } from "../../Api/APi";
+import { Axios } from "../../../Api/Axios";
+import { GET_PRODUCT } from "../../../Api/APi";
 import { Button } from "primereact/button";
 import { Rating } from "primereact/rating";
 import { Tag } from "primereact/tag";
