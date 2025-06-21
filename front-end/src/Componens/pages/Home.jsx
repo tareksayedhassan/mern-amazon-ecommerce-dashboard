@@ -5,6 +5,7 @@ import BestSeal from "./bestseal";
 import Categories from "./Categoryies";
 import Brands from "./Brands";
 import Clothes from "./Clothes";
+import Footer from "./Footer";
 const Home = () => {
   return (
     <div>
@@ -14,6 +15,7 @@ const Home = () => {
       <Categories />
       <Brands />
       <Clothes />
+      <Footer />
     </div>
   );
 };

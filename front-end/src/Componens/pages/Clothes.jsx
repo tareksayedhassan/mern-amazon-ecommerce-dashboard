@@ -13,14 +13,11 @@ const Clothes = () => {
   useEffect(() => {
     const getDescoundPro = async () => {
       try {
-        const res = await Axios.get(`/${GET_PRODUCT}`);
+        const res = await Axios.get(`/${GET_PRODUCT}?category=clothes`);
         const allProducts = res.data.data;
+        console.log("All Products:", allProducts);
 
-        const offerProducts = allProducts
-          .filter((product) => product.category === "clothes")
-          .slice(0, 5);
-
-        setProducts(offerProducts);
+        setProducts(allProducts);
       } catch (error) {
         console.error("Error fetching clothes products:", error);
       }

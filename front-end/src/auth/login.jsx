@@ -6,6 +6,8 @@ import { useNavigate } from "react-router-dom";
 import { BASE_URL, LOGIN } from "../Api/APi";
 import Loading from "../Loading/Loading";
 import Cookie from "cookie-universal";
+import "./form.css";
+
 import googleIcon from "../assets/download.png";
 import "../css/google.css";
 import { jwtDecode } from "jwt-decode";

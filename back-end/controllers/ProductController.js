@@ -5,7 +5,7 @@ const AppError = require("../utils/appError");
 const { SUCCESS, FAIL } = require("../utils/httpStatusText");
 const path = require("path");
 const fs = require("fs");
-
+const CategoryModel = require("../models/Category.model");
 const addProduct = asyncWrapper(async (req, res, next) => {
   if (req.user.role !== "product manager" && req.user.role !== "admin") {
     return next(new AppError("Unauthorized", 401, FAIL));
@@ -32,7 +32,7 @@ const addProduct = asyncWrapper(async (req, res, next) => {
     title,
     price,
     description,
-    category,
+    category: category ? new mongoose.Types.ObjectId(category) : null,
     rating,
     ratings_number,
     discount,
@@ -76,21 +76,28 @@ const getSingleProduct = asyncWrapper(async (req, res, next) => {
     data: productWithImage,
   });
 });
+
 const getAllProducts = asyncWrapper(async (req, res, next) => {
-  const { page = 1, limit = 10, search = "" } = req.query;
+  const { page = 1, limit = 10, search = "", category } = req.query;
   const skip = (parseInt(page) - 1) * parseInt(limit);
   const baseUrl = `${req.protocol}://${req.get("host")}/uploads/`;
 
-  // ✅ فلترة على أكتر من حقل
-  const searchQuery = search
-    ? {
-        $or: [
-          { title: { $regex: search, $options: "i" } },
-          { description: { $regex: search, $options: "i" } },
-          { about: { $regex: search, $options: "i" } },
-        ],
-      }
-    : {};
+  const searchQuery = {};
+
+  if (search) {
+    searchQuery.$or = [
+      { title: { $regex: search, $options: "i" } },
+      { description: { $regex: search, $options: "i" } },
+      { about: { $regex: search, $options: "i" } },
+    ];
+  }
+
+  if (category) {
+    const categoryDoc = await CategoryModel.findOne({ name: category });
+    if (categoryDoc) {
+      searchQuery.category = categoryDoc._id;
+    }
+  }
 
   const total = await ProductModel.countDocuments(searchQuery);
 
