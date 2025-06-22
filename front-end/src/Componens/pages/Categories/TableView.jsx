@@ -2,9 +2,8 @@ import React, { useEffect, useState } from "react";
 import { Axios } from "../../../Api/Axios";
 import { GET_GATEGORY } from "../../../Api/APi";
 import { Card } from "primereact/card";
-import { Avatar } from "primereact/avatar";
+import { Button } from "primereact/button";
 import { toast } from "react-toastify";
-import { Tooltip } from "primereact/tooltip";
 import { useNavigate } from "react-router-dom";
 
 const TableView = () => {
@@ -15,46 +14,75 @@ const TableView = () => {
     const fetchCategories = async () => {
       try {
         const res = await Axios.get(`/${GET_GATEGORY}`);
-        const allCategories = res.data.data;
-        setCategories(allCategories);
+        setCategories(res.data.data);
       } catch (error) {
-        toast.error("Cannt get categories");
+        toast.error("تعذر تحميل الأقسام");
       }
     };
     fetchCategories();
   }, []);
 
   return (
-    <div className="p-4">
-      <div className="grid grid-nogutter justify-content-center">
+    <div className="p-3">
+      <div className="grid">
         {categories.map((cat, index) => (
           <div
             key={cat._id || index}
-            className="col-12 sm:col-6 md:col-4 lg:col-3 p-2"
+            className="col-12 sm:col-6 md:col-4 lg:col-3"
           >
-            <Tooltip
-              target={`.cat-${index}`}
-              content={cat.name}
-              position="top"
-              showDelay={300}
-            />
             <Card
-              className="shadow-3 hover:shadow-5 transition-all"
-              onClick={() => navigate(`/category/${cat._id}`)}
-              style={{ cursor: "pointer", textAlign: "center" }}
+              className="p-0 border-1 surface-border border-round"
+              style={{
+                overflow: "hidden",
+                minHeight: "320px",
+                borderRadius: "12px",
+                transition: "transform 0.3s, box-shadow 0.3s",
+              }}
+              onMouseEnter={(e) => {
+                e.currentTarget.style.boxShadow = "0 4px 16px rgba(0,0,0,0.1)";
+                e.currentTarget.style.transform = "translateY(-5px)";
+              }}
+              onMouseLeave={(e) => {
+                e.currentTarget.style.boxShadow = "none";
+                e.currentTarget.style.transform = "translateY(0)";
+              }}
             >
-              <Avatar
-                image={cat.image || "https://via.placeholder.com/160"}
-                shape="circle"
-                className={`cat-${index} mb-3`}
+              <img
+                src={cat.image || "https://via.placeholder.com/300x200"}
+                alt={cat.name}
                 style={{
-                  width: "120px",
-                  height: "120px",
-                  border: "2px solid #ccc",
-                  margin: "0 auto",
+                  width: "100%",
+                  height: "180px",
+                  objectFit: "cover",
+                  borderTopLeftRadius: "12px",
+                  borderTopRightRadius: "12px",
                 }}
               />
-              <h3 className="text-lg font-bold text-gray-800">{cat.name}</h3>
+              <div className="p-3 text-center">
+                <h3
+                  className="text-900 font-semibold mb-2"
+                  style={{ fontSize: "1.1rem", color: "#333" }}
+                >
+                  {cat.name}
+                </h3>
+                <Button
+                  label="Shop Now"
+                  className="p-button-sm p-button-outlined"
+                  onClick={() => navigate(`/category/${cat._id}`)}
+                  style={{
+                    borderColor: "#0d6efd",
+                    color: "#0d6efd",
+                  }}
+                  onMouseOver={(e) => {
+                    e.target.style.backgroundColor = "#0d6efd";
+                    e.target.style.color = "#fff";
+                  }}
+                  onMouseOut={(e) => {
+                    e.target.style.backgroundColor = "transparent";
+                    e.target.style.color = "#0d6efd";
+                  }}
+                />
+              </div>
             </Card>
           </div>
         ))}

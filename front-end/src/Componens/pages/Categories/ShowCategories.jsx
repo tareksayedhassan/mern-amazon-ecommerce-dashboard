@@ -36,14 +36,19 @@ const ShowCategories = () => {
         </>
       )}
 
-      <div className="flex flex-col md:flex-row gap-3 mt-4 min-h-[calc(100vh-140px)]">
+      <div className="grid mt-4" style={{ minHeight: "calc(100vh - 140px)" }}>
         {windowSize >= 768 && (
-          <div className="w-full md:w-[280px] flex-shrink-0 overflow-y-auto max-h-[calc(100vh-140px)]">
+          <div
+            className="col-fixed"
+            style={{
+              width: "300px",
+            }}
+          >
             <SidebarFilters />
           </div>
         )}
 
-        <div className="flex-1 overflow-auto">
+        <div className="col" style={{ overflowY: "auto" }}>
           <TableView />
         </div>
       </div>
