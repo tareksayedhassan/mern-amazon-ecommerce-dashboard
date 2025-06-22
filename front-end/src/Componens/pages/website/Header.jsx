@@ -118,7 +118,7 @@ const Header = () => {
         </div>
         <Sidebar visible={visible} onHide={() => setVisible(false)}>
           <h2>Sidebar</h2>
-          <p>محتوى السايد بار هنا...</p>
+          <p>hello side bar</p>
         </Sidebar>
       </div>
       <br />

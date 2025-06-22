@@ -14,13 +14,11 @@ const TableView = () => {
   useEffect(() => {
     const fetchCategories = async () => {
       try {
-        const res = await Axios.get(`/${GET_GATEGORY}`).then((res) =>
-          console.log(res.data.data)
-        );
+        const res = await Axios.get(`/${GET_GATEGORY}`);
         const allCategories = res.data.data;
         setCategories(allCategories);
       } catch (error) {
-        toast.error("تعذر تحميل الأقسام");
+        toast.error("Cannt get categories");
       }
     };
     fetchCategories();
