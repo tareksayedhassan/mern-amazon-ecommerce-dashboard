@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { GET_SINGLE_CATEGORY } from "../../../../Api/APi";
 import { Axios } from "../../../../Api/Axios";
 import { DataView, DataViewLayoutOptions } from "primereact/dataview";
@@ -8,27 +8,40 @@ import { Rating } from "primereact/rating";
 import { Button } from "primereact/button";
 import { classNames } from "primereact/utils";
 import { Image } from "primereact/image";
+import { faCircleInfo } from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { toast } from "react-toastify";
 
 const Viewproducts = () => {
-  const { id } = useParams();
+  const { categoryId } = useParams();
+
   const [category, setCategory] = useState({});
   const [productss, setproductss] = useState([]);
   const [layout, setLayout] = useState("grid");
+  const navigate = useNavigate();
+
+  const handelNav = (products) => {
+    navigate(`/show-categories/${categoryId}/${products._id}`);
+  };
+
+  const handleAddToCart = (product) => {
+    console.log("تم إضافة المنتج إلى السلة:", product);
+    // ممكن تضيف هنا toast أو dispatch لـ Redux أو أي logic حسب حالتك
+  };
 
   useEffect(() => {
     const fetchCategoryData = async () => {
       try {
-        const res = await Axios.get(`${GET_SINGLE_CATEGORY}/${id}`);
+        const res = await Axios.get(`${GET_SINGLE_CATEGORY}/${categoryId}`);
         setCategory(res.data.data.category);
         setproductss(res.data.data.products);
-        console.log(res.data.data.products);
       } catch (error) {
         toast.error("Cannot get Category");
         console.error(error);
       }
     };
     fetchCategoryData();
-  }, [id]);
+  }, [categoryId]);
   const getSeverity = (products) => {
     switch (products.status?.toLowerCase()) {
       case "available":
@@ -42,7 +55,7 @@ const Viewproducts = () => {
       case "sold out":
         return "danger";
       default:
-        return "info"; // افتراضي لو فيه حالة مش متوقعة
+        return "info";
     }
   };
 
@@ -84,18 +97,26 @@ const Viewproducts = () => {
             </div>
             <div className="flex sm:flex-column align-items-center sm:align-items-end gap-2 sm:gap-1">
               <span className="text-lg font-semibold">${products.price}</span>
-              <Button
-                icon="pi pi-shopping-cart"
-                className="p-button-rounded p-button-sm"
-                disabled={products.inventoryStatus === "OUTOFSTOCK"}
-              />
+              <div className="flex justify-content-between gap-2">
+                <Button
+                  icon="pi pi-shopping-cart"
+                  className="p-button-sm "
+                  disabled={products.status?.toLowerCase() === "out of stock"}
+                  onClick={() => handleAddToCart(products)}
+                />
+                <Button
+                  icon={<FontAwesomeIcon icon={faCircleInfo} />}
+                  className="p-button-sm"
+                  onClick={() => handelNav(products)}
+                />
+              </div>
             </div>
           </div>
         </div>
       </div>
     );
   };
-  const gridItem = (products) => {
+  const gridItem = (products, handelNav, handleAddToCart) => {
     return (
       <div className="col-12 sm:col-6 lg:col-4 xl:col-3 p-2" key={products.id}>
         <div
@@ -105,7 +126,7 @@ const Viewproducts = () => {
           <Tag
             value={products.status}
             severity={getSeverity(products)}
-            className=" px-3 py-1 border-round "
+            className="px-3 py-1 border-round"
             style={{
               position: "absolute",
               top: "10px",
@@ -141,15 +162,23 @@ const Viewproducts = () => {
             <Rating value={products.rating} readOnly cancel={false} />
           </div>
 
-          <div className="flex align-items-center justify-content-between">
+          <div className="flex flex-column gap-2 mt-2">
             <span className="text-lg font-bold text-primary">
               ${products.price}
             </span>
-            <Button
-              icon="pi pi-shopping-cart"
-              className="p-button-rounded p-button-sm"
-              disabled={products.status?.toLowerCase() === "out of stock"}
-            />
+            <div className="flex justify-content-between gap-2">
+              <Button
+                icon="pi pi-shopping-cart"
+                className="p-button-sm "
+                disabled={products.status?.toLowerCase() === "out of stock"}
+                onClick={() => handleAddToCart(products)}
+              />
+              <Button
+                icon={<FontAwesomeIcon icon={faCircleInfo} />}
+                className="p-button-sm"
+                onClick={() => handelNav(products)}
+              />
+            </div>
           </div>
         </div>
       </div>
@@ -157,12 +186,10 @@ const Viewproducts = () => {
   };
 
   const itemTemplate = (products, layout, index) => {
-    if (!products) {
-      return;
-    }
-
+    if (!products) return;
     if (layout === "list") return listItem(products, index);
-    else if (layout === "grid") return gridItem(products);
+    else if (layout === "grid")
+      return gridItem(products, handelNav, handleAddToCart);
   };
 
   const listTemplate = (productss, layout) => {

@@ -28,7 +28,7 @@ body {
   display: flex;
   justify-content: center;
   align-items: center;
-  min-height: 100vh; /* لضمان توسيط الفورم عموديًا */
+  min-height: 100vh;
   margin: 0;
   padding: 0;
 }
@@ -37,11 +37,11 @@ body {
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 100%; /* لضمان أن app-row يأخذ العرض الكامل */
+  width: 100%;
 }
 
 .h-100 {
-  height: 100vh; /* يبقى كما هو */
+  height: 100vh;
 }
 
 .app-row .app-col-12 {

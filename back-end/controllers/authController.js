@@ -8,6 +8,7 @@ const generateJWT = require("../utils/generateJWT");
 const GoogleStrategy = require("passport-google-oauth2").Strategy;
 const passport = require("passport");
 const session = require("express-session");
+
 const register = asyncWrapper(async (req, res, next) => {
   const { name, email, password, confirmPassword, role } = req.body;
 
@@ -32,6 +33,7 @@ const register = asyncWrapper(async (req, res, next) => {
   });
 
   const { token, refreshToken } = await generateJWT({
+    name: newUser.name,
     email: newUser.email,
     id: newUser.id,
     role: newUser.role,
@@ -77,6 +79,7 @@ const login = asyncWrapper(async (req, res, next) => {
   }
 
   const { token, refreshToken } = await generateJWT({
+    name: user.name,
     email: user.email,
     id: user._id,
     role: user.role,

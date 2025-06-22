@@ -9,11 +9,18 @@ import RoleBasedRoute from "../auth/RoleBasedRoute";
 const Register = lazy(() => import("../auth/register"));
 const Login = lazy(() => import("../auth/login"));
 const Home = lazy(() => import("../Componens/pages/website/Home"));
+const cart = lazy(() => import("../Componens/pages/website/Cart"));
+
 const showCategories = lazy(() =>
   import("../Componens/pages/Categories/ShowCategories")
 );
 const ShowProducts = lazy(() =>
   import("../Componens/pages/Categories/showProductsByCategories/ShowProducts")
+);
+const ProductDetails = lazy(() =>
+  import(
+    "../Componens/pages/Categories/showProductsByCategories/ProductDetails"
+  )
 );
 
 const Users = lazy(() => import("../Dashboard/pages/users/Users"));
@@ -64,12 +71,20 @@ const Router = createBrowserRouter([
         element: withSuspense(Register),
       },
       {
+        path: "cart",
+        element: withSuspense(cart),
+      },
+      {
         path: "show-categories",
         element: withSuspense(showCategories),
       },
       {
-        path: "show-categories/:id",
+        path: "show-categories/:categoryId",
         element: withSuspense(ShowProducts),
+      },
+      {
+        path: "show-categories/:categoryId/:productId",
+        element: withSuspense(ProductDetails),
       },
       {
         element: <RequiredAuth />,

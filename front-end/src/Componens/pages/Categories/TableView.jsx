@@ -14,14 +14,15 @@ const TableView = () => {
     const fetchCategories = async () => {
       try {
         const res = await Axios.get(`/${GET_GATEGORY}`);
+        console.log("Categories Data:", res.data.data);
+
         setCategories(res.data.data);
       } catch (error) {
-        toast.error("تعذر تحميل الأقسام");
+        toast.error("Cannt get Categories");
       }
     };
     fetchCategories();
   }, []);
-
   return (
     <div className="p-3">
       <div className="grid">

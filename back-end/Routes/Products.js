@@ -40,7 +40,7 @@ router.post("/", adminOnly, upload.array("image", 10), addProduct);
 
 router.get("/", getAllProducts);
 
-router.get("/:id", adminOnly, getSingleProduct);
+router.get("/:id", getSingleProduct);
 router.delete("/:id", adminOnly, deleteProducts);
 
 router.patch("/:id", upload.array("image", 10), adminOnly, editPrducts);

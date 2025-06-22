@@ -15,7 +15,6 @@ const Clothes = () => {
       try {
         const res = await Axios.get(`/${GET_PRODUCT}?category=clothes`);
         const allProducts = res.data.data;
-        console.log("All Products:", allProducts);
 
         setProducts(allProducts);
       } catch (error) {

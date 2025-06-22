@@ -10,8 +10,7 @@ import { Button } from "primereact/button";
 
 const ShowCategories = () => {
   const { windowSize } = useContext(WindowSize);
-  const [showPhoneSidebar, setShowPhoneSidebar] = useState(false); // حالة فتح السايد بار في الموبايل
-
+  const [showPhoneSidebar, setShowPhoneSidebar] = useState(false);
   return (
     <>
       <Header />
