@@ -5,6 +5,7 @@ const { SUCCESS, FAIL } = require("../utils/httpStatusText");
 const { default: mongoose } = require("mongoose");
 const fs = require("node:fs");
 const path = require("path");
+const ProductModel = require("../models/Product.model");
 // add new category
 
 const AddCategory = asyncWrapper(async (req, res, next) => {
@@ -34,19 +35,22 @@ const AddCategory = asyncWrapper(async (req, res, next) => {
     },
   });
 });
-
 const getSingleCategory = asyncWrapper(async (req, res, next) => {
   const category = await CategoryModel.findById(req.params.id);
   if (!category) {
-    return next(new AppError("Category not found", 404, FAIL));
+    return next(new AppError("Category not found", 404));
   }
 
+  const products = await ProductModel.find({ category: req.params.id });
+
   res.status(200).json({
-    status: SUCCESS,
-    data: { category },
+    status: "success",
+    data: {
+      category,
+      products,
+    },
   });
 });
-
 // get all categories
 
 const getAllCategoryes = asyncWrapper(async (req, res, next) => {

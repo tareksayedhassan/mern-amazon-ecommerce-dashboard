@@ -1,16 +1,16 @@
 import React, { useContext, useState } from "react";
-import Header from "../website/Header";
-import Footer from "../website/Footer";
-import SidebarFilters from "./SideBar";
-import CustomBreadCrumb from "../../../util/BreadCrumb";
-import TableView from "./TableView";
-import { WindowSize } from "../../../context/WindowContext";
-import PhoneSideBar from "./PhoneSideBar";
+import Header from "../../website/Header";
+import Footer from "../../website/Footer";
+import SidebarFilters from "../SideBar";
+import CustomBreadCrumb from "../../../../util/BreadCrumb";
+import { WindowSize } from "../../../../context/WindowContext";
+import PhoneSideBar from "../PhoneSideBar";
 import { Button } from "primereact/button";
+import ViewProducts from "./ViewProducts";
 
-const ShowCategories = () => {
+const ShowProducts = () => {
   const { windowSize } = useContext(WindowSize);
-  const [showPhoneSidebar, setShowPhoneSidebar] = useState(false); // حالة فتح السايد بار في الموبايل
+  const [showPhoneSidebar, setShowPhoneSidebar] = useState(false);
 
   return (
     <>
@@ -49,7 +49,7 @@ const ShowCategories = () => {
         )}
 
         <div className="col" style={{ overflowY: "auto" }}>
-          <TableView />
+          <ViewProducts />
         </div>
       </div>
       <Footer />
@@ -57,4 +57,4 @@ const ShowCategories = () => {
   );
 };
 
-export default ShowCategories;
+export default ShowProducts;

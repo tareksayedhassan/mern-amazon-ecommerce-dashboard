@@ -68,7 +68,7 @@ const TableView = () => {
                 <Button
                   label="Shop Now"
                   className="p-button-sm p-button-outlined"
-                  onClick={() => navigate(`/category/${cat._id}`)}
+                  onClick={() => navigate(`/show-categories/${cat._id}`)}
                   style={{
                     borderColor: "#0d6efd",
                     color: "#0d6efd",

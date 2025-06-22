@@ -12,6 +12,9 @@ const Home = lazy(() => import("../Componens/pages/website/Home"));
 const showCategories = lazy(() =>
   import("../Componens/pages/Categories/ShowCategories")
 );
+const ShowProducts = lazy(() =>
+  import("../Componens/pages/Categories/showProductsByCategories/ShowProducts")
+);
 
 const Users = lazy(() => import("../Dashboard/pages/users/Users"));
 const EditUser = lazy(() => import("../Dashboard/pages/users/EditUser"));
@@ -63,6 +66,10 @@ const Router = createBrowserRouter([
       {
         path: "show-categories",
         element: withSuspense(showCategories),
+      },
+      {
+        path: "show-categories/:id",
+        element: withSuspense(ShowProducts),
       },
       {
         element: <RequiredAuth />,

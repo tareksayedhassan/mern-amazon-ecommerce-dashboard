@@ -43,5 +43,5 @@ router.get("/", getAllCategoryes);
 router.delete("/:id", adminOnly, deleteCategory);
 
 router.patch("/:id", upload.single("image"), adminOnly, UpdateCategory);
-router.get("/:id", upload.single("image"), adminOnly, getSingleCategory);
+router.get("/:id", upload.single("image"), getSingleCategory);
 module.exports = router;
