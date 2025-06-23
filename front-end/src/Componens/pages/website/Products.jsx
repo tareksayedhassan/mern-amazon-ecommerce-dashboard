@@ -5,10 +5,12 @@ import { toast } from "react-toastify";
 import { Card } from "primereact/card";
 import { DataView } from "primereact/dataview";
 import { Button } from "primereact/button";
+import { useCart } from "../../../context/CartContext";
 
 const Products = () => {
   const [product, setProduct] = useState([]);
   const [layout, setLayout] = useState("grid");
+  const { addToCart } = useCart();
 
   useEffect(() => {
     const getProduct = async () => {
@@ -39,7 +41,12 @@ const Products = () => {
             style={{ height: "200px", objectFit: "cover" }}
           />
           <p className="mt-3">{product.description}</p>
-          <Button label="Buy Now" icon="pi pi-shopping-cart" className="mt-2" />
+          <Button
+            label="Buy Now"
+            icon="pi pi-shopping-cart"
+            className="mt-2"
+            onClick={() => addToCart()}
+          />
         </Card>
       </div>
     );

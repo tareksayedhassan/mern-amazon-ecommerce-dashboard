@@ -129,7 +129,14 @@ const Users = () => {
   );
 
   return (
-    <div style={{ maxWidth: "1100px", margin: "0 auto", padding: "1rem" }}>
+    <div
+      style={{
+        maxWidth: "1100px",
+        margin: "0 auto",
+        padding: "1rem",
+        overflowX: "auto",
+      }}
+    >
       <ToastContainer position="top-right" limit={2} />
       <div
         className="flex flex-wrap justify-content-between align-items-center mb-4"
@@ -149,7 +156,6 @@ const Users = () => {
           />
         </span>
       </div>
-
       <DataTable
         value={filteredUsers}
         paginator
@@ -157,9 +163,8 @@ const Users = () => {
         rowsPerPageOptions={[5, 10, 25, 50]}
         loading={loading}
         emptyMessage="No users found."
-        scrollable
-        scrollHeight="400px"
-        tableStyle={{ minWidth: "60rem" }}
+        responsiveLayout="scroll"
+        tableStyle={{ minWidth: "800px" }}
       >
         <Column field="name" header="Name" style={{ width: "25%" }} />
         <Column field="email" header="Email" style={{ width: "35%" }} />

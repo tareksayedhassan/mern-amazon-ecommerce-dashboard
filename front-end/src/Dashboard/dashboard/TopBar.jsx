@@ -9,6 +9,7 @@ import { GET_SINGLE_USER } from "../../Api/APi";
 import { Axios } from "../../Api/Axios";
 import { Dropdown } from "primereact/dropdown";
 import { useNavigate } from "react-router-dom";
+import { Button } from "primereact/button";
 
 const Topbar = () => {
   const [name, setName] = useState("User");
@@ -59,26 +60,31 @@ const Topbar = () => {
   };
 
   return (
-    <div className="top-bar">
-      <div className="topbar-left">
-        <h3 className="topbar-title">E-Commerce</h3>
+    <div className="top-bar flex justify-content-between align-items-center px-3 py-2 shadow-1 surface-0">
+      <div className="flex align-items-center gap-2">
+        <h3 className="m-0 text-xl font-bold">E-Commerce</h3>
         <FontAwesomeIcon
           icon={faBars}
-          className="topbar-icon"
+          className="text-xl cursor-pointer"
           onClick={() => setIsOpen((prev) => !prev)}
+          style={{ color: "#555" }}
         />
       </div>
-      <div className="topbar-dropdown">
-        <div className="card flex justify-content-center">
-          <Dropdown
-            value={{ name: name, code: "user" }}
-            onChange={handleDropdownChange}
-            options={options}
-            optionLabel="name"
-            placeholder={name}
-            className="w-full md:w-14rem"
-          />
-        </div>
+
+      <div className="flex align-items-center gap-2">
+        <Button
+          label="Website"
+          className="p-button-sm p-button-outlined"
+          onClick={() => navigate("/")}
+        />
+        <Dropdown
+          value={{ name: name, code: "user" }}
+          onChange={handleDropdownChange}
+          options={options}
+          optionLabel="name"
+          placeholder={name}
+          className="w-full md:w-14rem"
+        />
       </div>
     </div>
   );

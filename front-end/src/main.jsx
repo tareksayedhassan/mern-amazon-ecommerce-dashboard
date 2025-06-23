@@ -6,7 +6,7 @@ import "./css/media.css";
 import MenuContext from "./context/menuContext";
 import WindowContext from "./context/WindowContext";
 import { PrimeReactProvider } from "primereact/api";
-
+import { CartProvider } from "./context/CartContext";
 import "primereact/resources/themes/lara-light-blue/theme.css";
 import "primereact/resources/primereact.min.css";
 import "primeicons/primeicons.css";
@@ -16,13 +16,15 @@ import "./index.css";
 const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(
   <React.StrictMode>
-    <PrimeReactProvider>
-      <WindowContext>
-        <MenuContext>
-          <RouterProvider router={Router} />
-        </MenuContext>
-      </WindowContext>
-    </PrimeReactProvider>
+    <CartProvider>
+      <PrimeReactProvider>
+        <WindowContext>
+          <MenuContext>
+            <RouterProvider router={Router} />
+          </MenuContext>
+        </WindowContext>
+      </PrimeReactProvider>
+    </CartProvider>
   </React.StrictMode>
 );
 window.addEventListener("load", () => {

@@ -5,10 +5,12 @@ import { Button } from "primereact/button";
 import { Rating } from "primereact/rating";
 import { Tag } from "primereact/tag";
 import { useNavigate } from "react-router-dom";
+import { useCart } from "../../../context/CartContext";
 
 const BestSeal = () => {
   const [products, setProducts] = useState([]);
   const navigate = useNavigate();
+  const { addToCart } = useCart();
 
   useEffect(() => {
     const getDescoundPro = async () => {
@@ -153,7 +155,7 @@ const BestSeal = () => {
                 disabled={product.status === "Discontinued"}
                 onClick={(e) => {
                   e.stopPropagation();
-                  // Add to cart logic here
+                  () => addToCart(product);
                 }}
                 pt={{
                   root: { style: { padding: "0.4rem" } },

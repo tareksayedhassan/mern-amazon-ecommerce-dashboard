@@ -13,20 +13,19 @@ import { GET_GATEGORY } from "../../../Api/APi";
 import { toast } from "react-toastify";
 import Cookie from "cookie-universal";
 import { jwtDecode } from "jwt-decode";
-
+import { useCart } from "../../../context/CartContext";
 const Header = () => {
   const cookie = Cookie();
   const token = cookie.get("Bearer");
   const name = token ? jwtDecode(token)?.name : null;
-
   const [visible, setVisible] = useState(false);
   const [categories, setCategories] = useState([]);
   const [selected, setSelected] = useState(null);
   const [searchQuery, setSearchQuery] = useState("");
   const [showMobileSearch, setShowMobileSearch] = useState(false);
-
+  const [product, setProduct] = useState(0);
   const navigate = useNavigate();
-
+  const { cart } = useCart();
   useEffect(() => {
     const getCategories = async () => {
       try {
@@ -96,7 +95,10 @@ const Header = () => {
       </div>
     </div>
   );
-
+  // useEffect(() => {
+  //   const getProduct = JSON.parse(localStorage.getItem("product"));
+  //   setProduct(getProduct.length);
+  // }, [product]);
   return (
     <>
       <div
@@ -201,7 +203,7 @@ const Header = () => {
               style={{ color: "var(--primary-color)" }}
               onClick={() => navigate("/cart")}
             >
-              Cart
+              {cart.length}
             </p>
           </div>
         </div>
