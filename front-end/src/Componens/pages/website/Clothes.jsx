@@ -5,6 +5,7 @@ import { Button } from "primereact/button";
 import { Rating } from "primereact/rating";
 import { Tag } from "primereact/tag";
 import { useNavigate } from "react-router-dom";
+import { useCart } from "../../../context/CartContext";
 
 const Clothes = () => {
   const [products, setProducts] = useState([]);
@@ -23,7 +24,11 @@ const Clothes = () => {
     };
     getDescoundPro();
   }, []);
-
+  const { addToCart } = useCart();
+  const handilCart = (e, product) => {
+    e.stopPropagation();
+    addToCart(product);
+  };
   const getSeverity = (product) => {
     switch (product.status) {
       case "INSTOCK":
@@ -76,7 +81,7 @@ const Clothes = () => {
               background: "var(--surface-card)",
               overflow: "hidden",
             }}
-            onClick={() => navigate(`/product/${product._id}`)}
+            onClick={() => navigate(`/single-product/${product._id}`)}
           >
             {product.clothes && (
               <span
@@ -147,7 +152,7 @@ const Clothes = () => {
                 className="p-button-rounded p-button-outlined"
                 disabled={product.status === "Discontinued"}
                 onClick={(e) => {
-                  e.stopPropagation();
+                  handilCart(e, product);
                 }}
                 pt={{
                   root: { style: { padding: "0.4rem" } },

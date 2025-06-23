@@ -65,7 +65,7 @@ const BestSeal = () => {
           <Button
             label="View all >"
             className="p-button-text text-primary font-semibold"
-            onClick={() => navigate("/products")}
+            onClick={() => navigate("/product")}
           />
         </div>
       </div>
@@ -82,9 +82,8 @@ const BestSeal = () => {
               background: "var(--surface-card)",
               overflow: "hidden",
             }}
-            onClick={() => navigate(`/product/${product._id}`)}
+            onClick={() => navigate(`/single-product/${product._id}`)}
           >
-            {/* Blue discount badge in top-right */}
             {product.discount && (
               <span
                 className="text-xs font-semibold bg-blue-500 text-white px-2 py-1 border-round-md"

@@ -14,6 +14,7 @@ const cart = lazy(() => import("../Componens/pages/website/Cart"));
 const showCategories = lazy(() =>
   import("../Componens/pages/Categories/ShowCategories")
 );
+
 const ShowProducts = lazy(() =>
   import("../Componens/pages/Categories/showProductsByCategories/ShowProducts")
 );
@@ -21,6 +22,15 @@ const ProductDetails = lazy(() =>
   import(
     "../Componens/pages/Categories/showProductsByCategories/ProductDetails"
   )
+);
+
+const ShowBestDealProducts = lazy(() =>
+  import("../Componens/pages/Products/ShowBestDealProducts")
+);
+
+const wibsitePro = lazy(() => import("../Componens/pages/Products/Products"));
+const showSinglePro = lazy(() =>
+  import("../Componens/pages/Products/ViewSingleProduct")
 );
 
 const Users = lazy(() => import("../Dashboard/pages/users/Users"));
@@ -38,6 +48,7 @@ const EditCategory = lazy(() =>
   import("../Dashboard/pages/Categorys/EditCategory")
 );
 const Products = lazy(() => import("../Dashboard/pages/Products/Products"));
+
 const AddProducts = lazy(() =>
   import("../Dashboard/pages/Products/AddProducts")
 );
@@ -85,6 +96,19 @@ const Router = createBrowserRouter([
       {
         path: "show-categories/:categoryId/:productId",
         element: withSuspense(ProductDetails),
+      },
+
+      {
+        path: "product",
+        element: withSuspense(wibsitePro),
+      },
+      {
+        path: "product/:id",
+        element: withSuspense(ShowBestDealProducts),
+      },
+      {
+        path: "single-product/:id",
+        element: withSuspense(showSinglePro),
       },
       {
         element: <RequiredAuth />,

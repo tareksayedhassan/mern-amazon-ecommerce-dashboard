@@ -5,11 +5,12 @@ import { Card } from "primereact/card";
 import { Button } from "primereact/button";
 import { toast } from "react-toastify";
 import { useNavigate } from "react-router-dom";
+import { useCart } from "../../../context/CartContext";
 
 const TableView = () => {
   const [categories, setCategories] = useState([]);
   const navigate = useNavigate();
-
+  const { addToCart } = useCart();
   useEffect(() => {
     const fetchCategories = async () => {
       try {

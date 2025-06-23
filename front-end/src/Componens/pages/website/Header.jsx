@@ -82,7 +82,7 @@ const Header = () => {
                 }}
                 onClick={() => {
                   setSelected(item.name);
-                  navigate(`/show-categories/${item.categoryId}`);
+                  navigate(`/show-categories/${item._id}`);
                 }}
               />
             );
@@ -95,10 +95,7 @@ const Header = () => {
       </div>
     </div>
   );
-  // useEffect(() => {
-  //   const getProduct = JSON.parse(localStorage.getItem("product"));
-  //   setProduct(getProduct.length);
-  // }, [product]);
+
   return (
     <>
       <div
@@ -249,7 +246,7 @@ const Header = () => {
           {categories.map((item) => (
             <Link
               key={item.id || item.name}
-              to={`/show-categories/${item.categoryId}`}
+              to={`/show-categories/${item._id}`}
               className="no-underline text-sm"
               style={{ color: "var(--primary-color)" }}
               onClick={() => setVisible(false)}

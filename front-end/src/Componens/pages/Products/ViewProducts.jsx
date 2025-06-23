@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
-import { GET_SINGLE_CATEGORY } from "../../../../Api/APi";
-import { Axios } from "../../../../Api/Axios";
+import { Axios } from "../../../Api/Axios";
 import { DataView, DataViewLayoutOptions } from "primereact/dataview";
 import { Tag } from "primereact/tag";
 import { Rating } from "primereact/rating";
@@ -11,38 +10,35 @@ import { Image } from "primereact/image";
 import { faCircleInfo } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { toast } from "react-toastify";
-import { useCart } from "../../../../context/CartContext";
+import { useCart } from "../../../context/CartContext";
+import { GET_PRODUCT, GET_SINGLE_PRODUCT } from "../../../Api/APi";
 
 const Viewproducts = () => {
-  const { categoryId } = useParams();
   const { addToCart } = useCart();
-
-  const [category, setCategory] = useState({});
+  const { id } = useParams();
   const [productss, setproductss] = useState([]);
   const [layout, setLayout] = useState("grid");
   const navigate = useNavigate();
-
   const handelNav = (products) => {
-    navigate(`/show-categories/${categoryId}/${products._id}`);
+    navigate(`/show-categories/${products._id}`);
   };
 
   const handleAddToCart = (product) => {
-    addToCart(product);
+    addToCart();
   };
 
   useEffect(() => {
     const fetchCategoryData = async () => {
       try {
-        const res = await Axios.get(`${GET_SINGLE_CATEGORY}/${categoryId}`);
-        setCategory(res.data.data.category);
+        const res = await Axios.get(`${GET_SINGLE_PRODUCT}/${id}`);
         setproductss(res.data.data.products);
       } catch (error) {
-        toast.error("Cannot get Category");
+        toast.error("Cannot get product");
         console.error(error);
       }
     };
     fetchCategoryData();
-  }, [categoryId]);
+  }, [id]);
   const getSeverity = (products) => {
     switch (products.status?.toLowerCase()) {
       case "available":
