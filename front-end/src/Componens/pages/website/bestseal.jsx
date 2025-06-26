@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { Axios } from "../../../Api/Axios";
-import { GET_PRODUCT } from "../../../Api/APi";
+import { BASE_URL, GET_PRODUCT } from "../../../Api/APi";
 import { Button } from "primereact/button";
 import { Rating } from "primereact/rating";
 import { Tag } from "primereact/tag";
@@ -17,7 +17,7 @@ const BestSeal = () => {
       try {
         const res = await Axios.get(`/${GET_PRODUCT}`);
         const allProducts = res.data.data;
-
+        console.log("full api", BASE_URL + GET_PRODUCT);
         const offerProducts = allProducts
           .filter((product) => product.status === "Discontinued")
           .slice(0, 5);
